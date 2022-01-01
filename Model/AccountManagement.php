@@ -6,40 +6,86 @@
 
 namespace AlbertMage\Catalog\Model;
 
+use Magento\Framework\Event\ManagerInterface;
+use AlbertMage\Customer\Api\SocialRepositoryInterface;
+use Magento\Framework\Exception\State\UserLockedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\InvalidEmailOrPasswordException;
+
 /**
  * Handle various customer account actions
  */
-class AccountManagement implements \Magento\Customer\Model\AccountManagement
+class AccountManagement
 {
+
+    /**
+     * @var AuthenticationInterface
+     */
+    protected $authentication;
+
+    /**
+     * @var ManagerInterface
+     */
+    private $eventManager;
+
+    /**
+     * @var SocialRepositoryInterface
+     */
+    private $socialRepository;
+
+    /**
+     * @param ManagerInterface $eventManager
+     */
+    public function __construct(
+        ManagerInterface $eventManager,
+        SocialRepositoryInterface $socialRepository
+    ) {
+        $this->eventManager = $eventManager;
+        $this->socialRepository = $socialRepository;
+    }
 
     /**
      * Authenticate for WeChat miniprogram
      *
      * @param string $openid
-     * @throws InputException
+     * @throws NoSuchEntityException If customer doesn't exist
+     * @throws InvalidEmailOrPasswordException
+     * @throws UserLockedException
      */
-    public function authenticateForWxmp($openid)
+    public function authenticateForWeChatUser(\AlbertMage\Customer\Api\WeChat\WeChatUserInfoInterface $weChatUser)
     {
         try {
-            $customerId = 1;
-            $customer = $this->customerRepository->getById($customerId);
+            if ($socialAccount = $this->socialRepository->getByOpenId($openid)) {
+                
+            }
         } catch (NoSuchEntityException $e) {
             throw new InvalidEmailOrPasswordException(__('Invalid login.'));
         }
 
-        if ($this->getAuthentication()->isLocked($customerId)) {
+        $customer = $socialAccount->getCustomer();
+
+        if ($this->getAuthentication()->isLocked($customer->getId())) {
             throw new UserLockedException(__('The account is locked.'));
         }
-
-        $customerModel = $this->customerFactory->create()->updateData($customer);
-        $this->eventManager->dispatch(
-            'customer_customer_authenticated',
-            ['model' => $customerModel, 'password' => $password]
-        );
 
         $this->eventManager->dispatch('customer_data_object_login', ['customer' => $customer]);
 
         return $customer;
     }
 
+    /**
+     * Get authentication
+     *
+     * @return AuthenticationInterface
+     */
+    private function getAuthentication()
+    {
+        if (!($this->authentication instanceof \Magento\Customer\Model\AuthenticationInterface)) {
+            return \Magento\Framework\App\ObjectManager::getInstance()->get(
+                \Magento\Customer\Model\AuthenticationInterface::class
+            );
+        } else {
+            return $this->authentication;
+        }
+    }
 }

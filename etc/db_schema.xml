@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="customer_social" resource="default" engine="innodb" comment="Customer Social Account">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="true" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="varchar" name="openid" nullable="true" length="255" comment="Openid"/>
+        <column xsi:type="varchar" name="unionid" nullable="true" length="255" comment="Unionid"/>
+        <column xsi:type="varchar" name="application" nullable="false" length="40" comment="Social Application"/>
+        <column xsi:type="varchar" name="platform" nullable="false" default="WeChat" length="40" comment="Social Platform"/>
+        <column xsi:type="varchar" name="unique_hash" nullable="false" length="40" comment="Unique Hash"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="CUSTOMER_SOCIAL_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID" table="customer_social"
+                    column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="CUSTOMER_SOCIAL_OPENID_UNIONID">
+            <column name="openid"/>
+            <column name="unionid"/>
+        </constraint>
+        <index referenceId="CUSTOMER_SOCIAL_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="CUSTOMER_SOCIAL_OPENID" indexType="btree">
+            <column name="openid"/>
+        </index>
+        <index referenceId="CUSTOMER_SOCIAL_UNIONID" indexType="btree">
+            <column name="unionid"/>
+        <index referenceId="CUSTOMER_SOCIAL_UNIQUE_HASH" indexType="btree">
+            <column name="unique_hash"/>
+        </index>
+    </table>
+</schema>
