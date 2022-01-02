@@ -135,7 +135,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
     {
         /** @var Collection $collection */
         $collection = $this->socialCollectionFactory->create();
-        $collection->addFieldToFilter('unionid', ['eq' => $openid]);
+        $collection->addFieldToFilter('unionid', ['eq' => $unionId]);
         $collection->addFieldToFilter('customer_id', ['neq' => 'NULL']);
         if ($collection->getSize()) {
             foreach($collection as $item) {
@@ -156,8 +156,8 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
     {
         /** @var Collection $collection */
         $collection = $this->socialCollectionFactory->create();
-        $collection->addFieldToFilter('unionid', ['eq' => $openid]);
-        $collection->addFieldToFilter('customer_id', ['eq' => 'NULL']);
+        $collection->addFieldToFilter('unionid', ['eq' => $unionId]);
+        $collection->addFieldToFilter('customer_id', ['null' => true]);
         return $collection->getItems();
     }
 
@@ -172,7 +172,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
     {
         /** @var Collection $collection */
         $collection = $this->socialCollectionFactory->create();
-        $collection->addFieldToFilter('unionid', ['eq' => $uniqueId]);
+        $collection->addFieldToFilter('unique_hash', ['eq' => $uniqueId]);
         if ($collection->getSize()) {
             foreach($collection as $item) {
                 return $item;

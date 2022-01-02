@@ -187,7 +187,7 @@ class Social extends AbstractExtensibleModel implements SocialInterface
      */
     public function setUniqueHash($uniqueHash)
     {
-        return $this->setData(self::UNIQUE_HASH, $platform);
+        return $this->setData(self::UNIQUE_HASH, $uniqueHash);
     }
 
 

@@ -23,7 +23,7 @@ interface SocialInterface extends \Magento\Framework\Api\CustomAttributesDataInt
     const UNIOIONID = 'unionid';
     const APPLICATION = 'application';
     const PLATFORM = 'platform';
-    const UNIQUE_HASH = 'unique_hash'
+    const UNIQUE_HASH = 'unique_hash';
     /**#@-*/
 
     /**

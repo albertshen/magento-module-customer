@@ -23,7 +23,7 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init(\Learning\Test\Model\Social::class,
+        $this->_init(\AlbertMage\Customer\Model\Social::class,
             Social::class);
     }
 }

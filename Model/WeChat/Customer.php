@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace AlbertMage\Catalog\Model\WeChat;
+namespace AlbertMage\Customer\Model\WeChat;
 
 use Magento\Framework\App\ObjectManager;
 
