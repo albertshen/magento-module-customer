@@ -1,5 +1,5 @@
 <?php
-namespace Learning\Test\Setup\Patch\Data;
+namespace AlbertMage\Customer\Setup\Patch\Data;
 
 use Exception;
 use Psr\Log\LoggerInterface;

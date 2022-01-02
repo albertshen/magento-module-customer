@@ -4,7 +4,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Learning\Test\Api;
+namespace AlbertMage\Customer\Api;
 
 /**
  * Customer social CRUD interface.
@@ -15,17 +15,17 @@ interface SocialRepositoryInterface
     /**
      * Save customer social.
      *
-     * @param \Learning\Test\Api\Data\SocialInterface $social
-     * @return \Learning\Test\Api\Data\SocialInterface
+     * @param \AlbertMage\Customer\Api\Data\SocialInterface $social
+     * @return \AlbertMage\Customer\Api\Data\SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function save(\Learning\Test\Api\Data\SocialInterface $social);
+    public function save(\AlbertMage\Customer\Api\Data\SocialInterface $social);
 
     /**
      * Retrieve customer social.
      *
      * @param int $socialId
-     * @return \Learning\Test\Api\Data\SocialInterface
+     * @return \AlbertMage\Customer\Api\Data\SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getById($socialId);
@@ -34,7 +34,7 @@ interface SocialRepositoryInterface
      * Retrieve customers social matching the specified criteria.
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \Learning\Test\Api\Data\SocialSearchResultsInterface
+     * @return \AlbertMage\Customer\Api\Data\SocialSearchResultsInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
@@ -42,11 +42,11 @@ interface SocialRepositoryInterface
     /**
      * Delete customer social.
      *
-     * @param \Learning\Test\Api\Data\SocialInterface $social
+     * @param \AlbertMage\Customer\Api\Data\SocialInterface $social
      * @return bool true on success
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function delete(\Learning\Test\Api\Data\SocialInterface $social);
+    public function delete(\AlbertMage\Customer\Api\Data\SocialInterface $social);
 
     /**
      * Delete customer social by ID.
