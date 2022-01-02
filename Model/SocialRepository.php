@@ -81,8 +81,8 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
     /**
      * Save customer social.
      *
-     * @param \AlbertMage\Customer\Api\Data\SocialInterface $social
-     * @return \AlbertMage\Customer\Api\Data\SocialInterface
+     * @param SocialInterface $social
+     * @return SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function save(\AlbertMage\Customer\Api\Data\SocialInterface $social)
@@ -95,7 +95,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
      * Retrieve customer social.
      *
      * @param int $socialId
-     * @return \AlbertMage\Customer\Api\Data\SocialInterface
+     * @return SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getById($socialId)
@@ -108,7 +108,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
      * Retrieve customer.
      *
      * @param int $openid
-     * @return \AlbertMage\Customer\Api\Data\SocialInterface
+     * @return SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getByOpenId($openid)
@@ -121,13 +121,14 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
                 return $item;
             }
         }
+        return null;
     }
 
     /**
-     * Retrieve customer.
+     * Retrieve bound customer.
      *
      * @param int $unionId
-     * @return boolean
+     * @return SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getByBoundUionId($unionId)
@@ -141,6 +142,43 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
                 return $item;
             }
         }
+        return null;
+    }
+
+    /**
+     * Retrieve not bound customer.
+     *
+     * @param int $unionId
+     * @return SocialInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getByNotBoundUionId($unionId)
+    {
+        /** @var Collection $collection */
+        $collection = $this->socialCollectionFactory->create();
+        $collection->addFieldToFilter('unionid', ['eq' => $openid]);
+        $collection->addFieldToFilter('customer_id', ['eq' => 'NULL']);
+        return $collection->getItems();
+    }
+
+    /**
+     * Retrieve customer.
+     *
+     * @param int $uniqueId
+     * @return SocialInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getByUniqueId($uniqueId)
+    {
+        /** @var Collection $collection */
+        $collection = $this->socialCollectionFactory->create();
+        $collection->addFieldToFilter('unionid', ['eq' => $uniqueId]);
+        if ($collection->getSize()) {
+            foreach($collection as $item) {
+                return $item;
+            }
+        }
+        return null;
     }
 
     /**
@@ -168,11 +206,11 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
     /**
      * Delete customer social.
      *
-     * @param \AlbertMage\Customer\Api\Data\SocialInterface $social
+     * @param SocialInterface $social
      * @return bool true on success
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function delete(\AlbertMage\Customer\Api\Data\SocialInterface $social)
+    public function delete(SocialInterface $social)
     {
         try {
             $this->socialResourceModel->delete($social);
