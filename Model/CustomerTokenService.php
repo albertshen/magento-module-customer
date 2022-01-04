@@ -84,7 +84,7 @@ class CustomerTokenService
             $socialUser = $this->socialUserManager->getSocialUser();
             return $this->doCreateCustomerAccessToken($socialUser);
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            \Magento\Framework\Exception\LocalizedException(__("code is incorrect"), null, 4001);
+            throw new \Magento\Framework\Exception\LocalizedException(__("code is incorrect"), null, 4001);
         } catch (UserLockedException $e) {
             throw new UserLockedException(__('The account is locked.'));
         }
