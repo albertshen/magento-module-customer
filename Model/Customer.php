@@ -4,14 +4,14 @@
  * See COPYING.txt for license details.
  */
 
-namespace AlbertMage\Customer\Model\WeChat;
+namespace AlbertMage\Customer\Model;
 
 use Magento\Framework\App\ObjectManager;
 
 /**
  *
  */
-class Customer implements \AlbertMage\Customer\Api\WeChat\CustomerInterface
+class Customer implements \AlbertMage\Customer\Api\CustomerInterface
 {
 
     /**

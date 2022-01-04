@@ -4,7 +4,7 @@
  * Copyright © PHP Digital, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace AlbertMage\Customer\Api\WeChat;
+namespace AlbertMage\Customer\Api;
 
 /**
  * Interface CustomerTokenServiceInterface

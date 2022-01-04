@@ -4,9 +4,8 @@
  * See COPYING.txt for license details.
  */
 
-namespace AlbertMage\Customer\Model\WeChat;
+namespace AlbertMage\Customer\Model;
 
-use Magento\Framework\Webapi\Rest\Request;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ManagerInterface;
 use AlbertMage\Customer\Api\SocialRepositoryInterface;
@@ -15,8 +14,9 @@ use Magento\Integration\Model\Oauth\TokenFactory as TokenModelFactory;
 use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\InvalidEmailOrPasswordException;
-use AlbertMage\Customer\Api\WeChat\WeChatUserInterface;
+use AlbertMage\Customer\Api\SocialUserInterface;
 use AlbertMage\Customer\Api\Data\SocialInterface;
+use AlbertMage\Customer\Api\SocialUserManagerInterface;
 
 /**
  *
@@ -41,14 +41,15 @@ class CustomerTokenService
     private $socialRepository;
 
     /**
+     * @var SocialUserManagerInterface
+     */
+    private $socialUserManager;
+
+    /**
      * @var Magento\Framework\Event\ManagerInterface
      */
     private $eventManager;
 
-    /**
-     * @var \Magento\Framework\Webapi\Rest\Request
-     */
-    protected $_request;
 
     /**
      * Initialize service
@@ -56,21 +57,21 @@ class CustomerTokenService
      * @param TokenModelFactory $tokenModelFactory
      * @param AuthenticationInterface authentication
      * @param SocialRepositoryInterface $socialRepository
-     * @param Request $request
      * @param ManagerInterface $eventManager
+     * @param SocialUserInterface[]
      */
     public function __construct(
         TokenModelFactory $tokenModelFactory,
         AuthenticationInterface $authentication,
         SocialRepositoryInterface $socialRepository,
-        Request $request,
-        ManagerInterface $eventManager
+        ManagerInterface $eventManager,
+        SocialUserManagerInterface $socialUserManager
     ) {
         $this->tokenModelFactory = $tokenModelFactory;
         $this->authentication = $authentication;
         $this->socialRepository = $socialRepository;
-        $this->_request = $request;
         $this->eventManager = $eventManager;
+        $this->socialUserManager = $socialUserManager;
     }
 
     /**
@@ -79,19 +80,11 @@ class CustomerTokenService
     public function createCustomerAccessToken()
     {
 
-        $code = $this->_request->getParam('code');
-        if (!$code) {
-            throw new \Magento\Framework\Exception\LocalizedException(__("code is incorrect"), null, 4001);
-        }
-
-        $weChatUser = ObjectManager::getInstance()->create(WeChatUserInterface::class);
-        $weChatUser->setApplication('web');
-        $weChatUser->setPlatform('WeChat');
-        $weChatUser->setOpenId($openId);
-        $weChatUser->setUnionId($unionId);
-
         try {
-            return $this->doCreateCustomerAccessToken($weChatUser);
+            $socialUser = $this->socialUserManager->getSocialUser();
+            return $this->doCreateCustomerAccessToken($socialUser);
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            \Magento\Framework\Exception\LocalizedException(__("code is incorrect"), null, 4001);
         } catch (UserLockedException $e) {
             throw new UserLockedException(__('The account is locked.'));
         }
@@ -103,30 +96,32 @@ class CustomerTokenService
      *
      * @return array
      */
-    private function doCreateCustomerAccessToken($weChatUser)
+    private function doCreateCustomerAccessToken($socialUser)
     {
 
-        if ($weChatUser->getUnionId() && $socialAccount = $this->socialRepository->getByBoundUionId($weChatUser->getUnionId())) {
+        // Login by UnionId
+        if ($socialUser->getUnionId() && $socialAccount = $this->socialRepository->getByBoundUionId($socialUser->getUnionId())) {
 
-            if ($socialAccount->getOpenId() === $weChatUser->getOpenId()) {
+            if ($socialAccount->getOpenId() === $socialUser->getOpenId()) {
                 return $this->getCustomerToken($socialAccount->getCustomer());
             } 
 
-            if ($socialCollection = $this->socialRepository->getByNotBoundUionId($weChatUser->getUnionId())) {
+            if ($socialCollection = $this->socialRepository->getByNotBoundUionId($socialUser->getUnionId())) {
                 foreach ($socialCollection as $account) {
                     $account->setCustomerId($socialAccount->getCustomer()->getId());
                     $this->socialRepository->save($account);
                 }
             } 
 
-            if (!$this->socialRepository->getByOpenId($weChatUser->getOpenId())) {
+            if (!$this->socialRepository->getByOpenId($socialUser->getOpenId())) {
                 //create and bind a new social account
-                $this->createSocialAccount($weChatUser, $socialAccount->getCustomer()->getId());
+                $this->createSocialAccount($socialUser, $socialAccount->getCustomer()->getId());
             }
 
         }
         
-        if ($socialAccount = $this->socialRepository->getByOpenId($weChatUser->getOpenId())) {
+        //Login by openId
+        if ($socialAccount = $this->socialRepository->getByOpenId($socialUser->getOpenId())) {
 
             if ($customer = $socialAccount->getCustomer()) {
                 return $this->getCustomerToken($socialAccount->getCustomer());
@@ -135,7 +130,7 @@ class CustomerTokenService
         }
 
         //create a new social account without binding
-        $socialAccount = $this->createSocialAccount($weChatUser);
+        $socialAccount = $this->createSocialAccount($socialUser);
 
         return ['uniqueHash' => $socialAccount->getUniqueHash()];
 
@@ -144,22 +139,22 @@ class CustomerTokenService
     /**
      * Create social account
      * 
-     * @param WeChatUserInterface $weChatUser
+     * @param SocialUserInterface $socialUser
      * @param string $customerId
      * @return SocialInterface
      */
-    private function createSocialAccount(WeChatUserInterface $weChatUser, $customerId = null)
+    private function createSocialAccount(SocialUserInterface $socialUser, $customerId = null)
     {
         $socialAccount = ObjectManager::getInstance()->create(SocialInterface::class);
         $mathRandom = ObjectManager::getInstance()->create(\Magento\Framework\Math\Random::class);
         $socialAccount->setUniqueHash($mathRandom->getUniqueHash());
-        $socialAccount->setOpenId($weChatUser->getOpenId());
-        $socialAccount->setUnionId($weChatUser->getUnionId());
+        $socialAccount->setOpenId($socialUser->getOpenId());
+        $socialAccount->setUnionId($socialUser->getUnionId());
         if ($customerId) {
             $socialAccount->setCustomerId($customerId);
         }
-        $socialAccount->setApplication($weChatUser->getApplication());
-        $socialAccount->setPlatform($weChatUser->getPlatform());
+        $socialAccount->setApplication($socialUser->getApplication());
+        $socialAccount->setPlatform($socialUser->getPlatform());
         $this->socialRepository->save($socialAccount);
         return $socialAccount;
     }

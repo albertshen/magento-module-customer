@@ -4,14 +4,14 @@
  * Copyright © PHP Digital, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace AlbertMage\Customer\Api\WeChat;
+namespace AlbertMage\Customer\Api;
 
 /**
- * Interface WeChatUserInterface
+ * Interface SocialUserInterface
  * @api
  * @since 101.0.0
  */
-interface WeChatUserInterface
+interface SocialUserInterface
 {
     /**
      * Get OpenId
@@ -24,7 +24,7 @@ interface WeChatUserInterface
      * Set OpenId
      *
      * @param string
-     * @return WeChatUserInterface
+     * @return SocialUserInterface
      */
     public function setOpenId($openId);
 
@@ -39,7 +39,7 @@ interface WeChatUserInterface
      * Set UnionId
      *
      * @param string
-     * @return WeChatUserInterface
+     * @return SocialUserInterface
      */
     public function setUnionId($openId);
 

@@ -4,14 +4,14 @@
  * See COPYING.txt for license details.
  */
 
-namespace AlbertMage\Customer\Model\WeChat;
+namespace AlbertMage\Customer\Model;
 
 use Magento\Framework\App\ObjectManager;
 
 /**
  *
  */
-class WeChatUser implements \AlbertMage\Customer\Api\WeChat\WeChatUserInterface
+class SocialUser implements \AlbertMage\Customer\Api\SocialUserInterface
 {
 
     /**
@@ -37,6 +37,20 @@ class WeChatUser implements \AlbertMage\Customer\Api\WeChat\WeChatUserInterface
      * @var string
      */
     private $unionId;
+
+    /**
+     * Initialize service
+     *
+     * @param string $application
+     * @param string $platform
+     */
+    public function __construct(
+        $application = null,
+        $platform = null
+    ) {
+        $this->application = $application ?? 'miniprogram';
+        $this->platform = $platform ?? 'WeChat';
+    }
 
     /**
      * @inheritdoc
