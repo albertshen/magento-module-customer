@@ -15,7 +15,7 @@ interface CustomerTokenServiceInterface
 {
     /**
      * Create customer AccessToken for miniprogram
-     *
+     * 
      * @return array
      */
     public function createCustomerAccessToken();

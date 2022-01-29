@@ -11,6 +11,7 @@
     <type name="AlbertMage\Customer\Model\SocialUserManager">
         <arguments>
             <argument name="providers" xsi:type="array">
+                <item name="default" xsi:type="string">AlbertMage\Customer\Model\WeChatWebsiteAppUserManager</item>
                 <item name="wxapp" xsi:type="string">AlbertMage\Customer\Model\WeChatWxappUserManager</item>
             </argument>
         </arguments>

@@ -111,7 +111,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
      * @return SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getByOpenId($openid)
+    public function getOneByOpenId($openid)
     {
         /** @var Collection $collection */
         $collection = $this->socialCollectionFactory->create();
@@ -131,7 +131,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
      * @return SocialInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getByBoundUionId($unionId)
+    public function getOneByBoundUionId($unionId)
     {
         /** @var Collection $collection */
         $collection = $this->socialCollectionFactory->create();
@@ -149,7 +149,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
      * Retrieve not bound customer.
      *
      * @param int $unionId
-     * @return SocialInterface
+     * @return SocialInterface[]
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getByNotBoundUionId($unionId)
@@ -165,7 +165,7 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
      * Retrieve customer.
      *
      * @param int $uniqueId
-     * @return SocialInterface
+     * @return SocialInterface[]
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getByUniqueId($uniqueId)
@@ -173,12 +173,28 @@ class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInter
         /** @var Collection $collection */
         $collection = $this->socialCollectionFactory->create();
         $collection->addFieldToFilter('unique_hash', ['eq' => $uniqueId]);
-        if ($collection->getSize()) {
-            foreach($collection as $item) {
-                return $item;
-            }
+        return $collection->getItems();
+    }
+
+    /**
+     * Is bound customer
+     *
+     * @param int $customerId
+     * @return boolean
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function hasBoundCustomer($customerId, $platform = null, $application = null)
+    {
+        /** @var Collection $collection */
+        $collection = $this->socialCollectionFactory->create();
+        $collection->addFieldToFilter('customer_id', ['eq' => $customerId]);
+        if ($platform) {
+            $collection->addFieldToFilter('platform', ['eq' => $platform]);
         }
-        return null;
+        if ($application) {
+            $collection->addFieldToFilter('application', ['eq' => $application]);
+        }
+        return $collection->getSize() ? true : false;
     }
 
     /**

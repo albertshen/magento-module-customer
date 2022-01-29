@@ -83,10 +83,10 @@ class CustomerTokenService
         try {
             $socialUser = $this->socialUserManager->getSocialUser();
             return $this->doCreateCustomerAccessToken($socialUser);
+        } catch (UserLockedException $e) {
+            throw new UserLockedException(__('The account is locked.'), null, 4004);
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__("code is incorrect"), null, 4001);
-        } catch (UserLockedException $e) {
-            throw new UserLockedException(__('The account is locked.'));
         }
 
     }
@@ -98,30 +98,34 @@ class CustomerTokenService
      */
     private function doCreateCustomerAccessToken($socialUser)
     {
-
         // Login by UnionId
-        if ($socialUser->getUnionId() && $socialAccount = $this->socialRepository->getByBoundUionId($socialUser->getUnionId())) {
+        if ($socialUser->getUnionId() && $socialAccount = $this->socialRepository->getOneByBoundUionId($socialUser->getUnionId())) {
 
-            if ($socialAccount->getOpenId() === $socialUser->getOpenId()) {
-                return $this->getCustomerToken($socialAccount->getCustomer());
-            } 
+            // if ($socialAccount->getOpenId() === $socialUser->getOpenId()) {
+            //     return $this->getCustomerToken($socialAccount->getCustomer());
+            // } 
 
+            // Bind customer for all those exist social accounts without binding
             if ($socialCollection = $this->socialRepository->getByNotBoundUionId($socialUser->getUnionId())) {
                 foreach ($socialCollection as $account) {
                     $account->setCustomerId($socialAccount->getCustomer()->getId());
                     $this->socialRepository->save($account);
                 }
-            } 
+            }
 
-            if (!$this->socialRepository->getByOpenId($socialUser->getOpenId())) {
+            // Bind customer for current new social accounts
+            if (!$this->socialRepository->getOneByOpenId($socialUser->getOpenId())) {
                 //create and bind a new social account
                 $this->createSocialAccount($socialUser, $socialAccount->getCustomer()->getId());
             }
 
+            // Generate customer token
+            return $this->getCustomerToken($socialAccount->getCustomer());
+
         }
         
         //Login by openId
-        if ($socialAccount = $this->socialRepository->getByOpenId($socialUser->getOpenId())) {
+        if ($socialAccount = $this->socialRepository->getOneByOpenId($socialUser->getOpenId())) {
 
             if ($customer = $socialAccount->getCustomer()) {
                 return $this->getCustomerToken($socialAccount->getCustomer());

@@ -59,7 +59,7 @@ interface SocialInterface extends \Magento\Framework\Api\CustomAttributesDataInt
     /**
      * Get openId
      *
-     * @return int|null
+     * @return string|null
      */
     public function getOpenId();
 
@@ -74,14 +74,14 @@ interface SocialInterface extends \Magento\Framework\Api\CustomAttributesDataInt
     /**
      * Get Union Id
      *
-     * @return int|null
+     * @return string|null
      */
     public function getUnionId();
 
     /**
      * Set Union Id
      *
-     * @param int $unionId
+     * @param string $unionId
      * @return $this
      */
     public function setUnionId($unionId);
