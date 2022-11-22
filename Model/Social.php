@@ -1,7 +1,6 @@
 <?php
 /**
  * Copyright © PHP Digital, Inc. All rights reserved.
- * See COPYING.txt for license details.
  */
 namespace AlbertMage\Customer\Model;
 
@@ -10,7 +9,7 @@ use AlbertMage\Customer\Api\Data\SocialInterface;
 
 /**
  * Class Social
- * @author Albert Shen(albertshen1206@gmail.com)
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class Social extends AbstractExtensibleModel implements SocialInterface
 {

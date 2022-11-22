@@ -1,14 +1,12 @@
 <?php
 /**
- *
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright © PHP Digital, Inc. All rights reserved.
  */
 namespace AlbertMage\Customer\Api;
 
 /**
  * Customer social CRUD interface.
- * @since 100.0.2
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 interface SocialRepositoryInterface
 {

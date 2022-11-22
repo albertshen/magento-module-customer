@@ -1,7 +1,6 @@
 <?php
 /**
  * Copyright © PHP Digital, Inc. All rights reserved.
- * See COPYING.txt for license details.
  */
 declare(strict_types=1);
 
@@ -12,6 +11,7 @@ use Magento\Framework\Api\SearchResults;
 
 /**
  * Service Data Object with Social search results.
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class SocialSearchResults extends SearchResults implements SocialSearchResultsInterface
 {

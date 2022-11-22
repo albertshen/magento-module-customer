@@ -1,15 +1,13 @@
 <?php
 /**
- *
  * Copyright © PHP Digital, Inc. All rights reserved.
- * See COPYING.txt for license details.
  */
 namespace AlbertMage\Customer\Api;
 
 /**
  * Interface for managing customers accounts.
  * @api
- * @since 100.0.2
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 interface AccountManagementInterface
 {

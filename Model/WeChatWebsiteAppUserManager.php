@@ -1,8 +1,6 @@
 <?php
 /**
- *
  * Copyright © PHP Digital, Inc. All rights reserved.
- * See COPYING.txt for license details.
  */
 namespace AlbertMage\Customer\Model;
 
@@ -13,7 +11,7 @@ use Magento\Framework\App\ObjectManager;
 /**
  * Interface SocialUserManagerInterface
  * @api
- * @since 101.0.0
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class WeChatWebsiteAppUserManager implements \AlbertMage\Customer\Api\SocialUserManagerInterface
 {

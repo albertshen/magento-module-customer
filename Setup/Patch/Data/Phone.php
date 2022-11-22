@@ -1,4 +1,7 @@
 <?php
+/**
+ * Copyright © PHP Digital, Inc. All rights reserved.
+ */
 namespace AlbertMage\Customer\Setup\Patch\Data;
 
 use Exception;
@@ -13,6 +16,7 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
 
 /**
  * Creates a customer attribute for managing a customer's external system ID
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class Phone implements DataPatchInterface
 {

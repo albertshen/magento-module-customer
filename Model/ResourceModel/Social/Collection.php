@@ -1,10 +1,7 @@
 <?php
 /**
- *
  * Copyright © PHP Digital, Inc. All rights reserved.
- * See COPYING.txt for license details.
  */
-
 namespace AlbertMage\Customer\Model\ResourceModel\Social;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
@@ -12,7 +9,7 @@ use AlbertMage\Customer\Model\ResourceModel\Social;
 
 /**
  * Class Collection
- * @author Suman Kar(suman.jis@gmail.com)
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class Collection extends AbstractCollection
 {

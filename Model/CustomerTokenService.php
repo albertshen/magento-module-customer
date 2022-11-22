@@ -1,9 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright © PHP Digital, Inc. All rights reserved.
  */
-
 namespace AlbertMage\Customer\Model;
 
 use Magento\Framework\App\ObjectManager;
@@ -19,7 +17,7 @@ use AlbertMage\Customer\Api\Data\SocialInterface;
 use AlbertMage\Customer\Api\SocialUserManagerInterface;
 
 /**
- *
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class CustomerTokenService
 {

@@ -1,15 +1,14 @@
 <?php
 /**
  * Copyright © PHP Digital, Inc. All rights reserved.
- * See COPYING.txt for license details.
  */
-
 namespace AlbertMage\Customer\Model;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Registry for Social models
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class SocialRegistry
 {

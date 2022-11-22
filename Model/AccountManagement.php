@@ -1,9 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright © PHP Digital, Inc. All rights reserved.
  */
-
 namespace AlbertMage\Customer\Model;
 
 use Magento\Framework\App\ObjectManager;
@@ -11,7 +9,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use AlbertMage\Customer\Api\SocialRepositoryInterface;
 
 /**
- *
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class AccountManagement implements \AlbertMage\Customer\Api\AccountManagementInterface
 {

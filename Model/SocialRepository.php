@@ -1,9 +1,6 @@
 <?php
 /**
- * Customer social entity resource model
- *
  * Copyright © PHP Digital, Inc. All rights reserved.
- * See COPYING.txt for license details.
  */
 namespace AlbertMage\Customer\Model;
 
@@ -19,7 +16,7 @@ use AlbertMage\Customer\Model\ResourceModel\Social\CollectionFactory;
 /**
  * Social repository.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @author Albert Shen <albertshen1206@gmail.com>
  */
 class SocialRepository implements \AlbertMage\Customer\Api\SocialRepositoryInterface
 {
