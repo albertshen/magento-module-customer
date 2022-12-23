@@ -7,10 +7,10 @@ namespace AlbertMage\Customer\Model\ResourceModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
- * Class Student
+ * Class SocialAccount
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-class Social extends AbstractDb
+class SocialAccount extends AbstractDb
 {
     /**
      * Initialize resource model
@@ -19,6 +19,6 @@ class Social extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('customer_social', 'entity_id');
+        $this->_init('customer_social_account', 'entity_id');
     }
 }

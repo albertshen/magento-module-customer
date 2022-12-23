@@ -6,14 +6,15 @@ namespace AlbertMage\Customer\Model;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ManagerInterface;
-use AlbertMage\Customer\Api\SocialRepositoryInterface;
+use AlbertMage\Customer\Api\SocialAccountRepositoryInterface;
 use Magento\Customer\Model\AuthenticationInterface;
 use Magento\Integration\Model\Oauth\TokenFactory as TokenModelFactory;
 use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\InvalidEmailOrPasswordException;
+use Magento\Customer\Model\CustomerFactory;
 use AlbertMage\Customer\Api\SocialUserInterface;
-use AlbertMage\Customer\Api\Data\SocialInterface;
+use AlbertMage\Customer\Api\Data\SocialAccountInterface;
 use AlbertMage\Customer\Api\SocialUserManagerInterface;
 
 /**
@@ -34,53 +35,51 @@ class CustomerTokenService
     protected $authentication;
 
     /**
-     * @var SocialRepositoryInterface
+     * @var SocialAccountRepositoryInterface
      */
-    private $socialRepository;
+    private $socialAccountRepository;
 
     /**
-     * @var SocialUserManagerInterface
+     * @var CustomerFactory
      */
-    private $socialUserManager;
+    protected $customerFactory
 
     /**
      * @var Magento\Framework\Event\ManagerInterface
      */
     private $eventManager;
 
-
     /**
      * Initialize service
      *
      * @param TokenModelFactory $tokenModelFactory
      * @param AuthenticationInterface authentication
-     * @param SocialRepositoryInterface $socialRepository
+     * @param SocialAccountRepositoryInterface $socialAccountRepository
      * @param ManagerInterface $eventManager
-     * @param SocialUserInterface[]
+     * @param CustomerFactory $customerFactory
      */
     public function __construct(
         TokenModelFactory $tokenModelFactory,
         AuthenticationInterface $authentication,
-        SocialRepositoryInterface $socialRepository,
-        ManagerInterface $eventManager,
-        SocialUserManagerInterface $socialUserManager
+        SocialAccountRepositoryInterface $socialAccountRepository,
+        CustomerFactory $customerFactory,
+        ManagerInterface $eventManager
     ) {
         $this->tokenModelFactory = $tokenModelFactory;
         $this->authentication = $authentication;
-        $this->socialRepository = $socialRepository;
+        $this->socialAccountRepository = $socialAccountRepository;
+        $this->customerFactory = $customerFactory;
         $this->eventManager = $eventManager;
-        $this->socialUserManager = $socialUserManager;
     }
 
     /**
      * @inheritdoc
      */
-    public function createCustomerAccessToken()
+    public function createCustomerAccessToken(\AlbertMage\Customer\Model\SocialAccount $socialAccount)
     {
 
         try {
-            $socialUser = $this->socialUserManager->getSocialUser();
-            return $this->doCreateCustomerAccessToken($socialUser);
+            return $this->doCreateCustomerAccessToken($socialAccount);
         } catch (UserLockedException $e) {
             throw new UserLockedException(__('The account is locked.'), null, 4004);
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
@@ -97,36 +96,37 @@ class CustomerTokenService
     private function doCreateCustomerAccessToken($socialUser)
     {
         // Login by UnionId
-        if ($socialUser->getUnionId() && $socialAccount = $this->socialRepository->getOneByBoundUionId($socialUser->getUnionId())) {
+        if ($socialUser->getUnionId() && $socialAccount = $this->socialAccountRepository->getOneByBoundUionId($socialUser->getUnionId())) {
 
             // if ($socialAccount->getOpenId() === $socialUser->getOpenId()) {
             //     return $this->getCustomerToken($socialAccount->getCustomer());
             // } 
 
             // Bind customer for all those exist social accounts without binding
-            if ($socialCollection = $this->socialRepository->getByNotBoundUionId($socialUser->getUnionId())) {
-                foreach ($socialCollection as $account) {
-                    $account->setCustomerId($socialAccount->getCustomer()->getId());
-                    $this->socialRepository->save($account);
+            if ($socialAccountCollection = $this->socialAccountRepository->getByNotBoundUionId($socialAccount->getUnionId())) {
+                foreach ($socialAccountCollection as $account) {
+                    $account->setCustomerId($socialAccount->getCustomerId());
+                    $this->socialAccountRepository->save($account);
                 }
             }
 
-            // Bind customer for current new social accounts
-            if (!$this->socialRepository->getOneByOpenId($socialUser->getOpenId())) {
+            // Bind customer for current new social account which id base on openid
+            if (!$this->socialAccountRepository->getOneByOpenId($socialUser->getOpenId())) {
                 //create and bind a new social account
-                $this->createSocialAccount($socialUser, $socialAccount->getCustomer()->getId());
+                $socialUser->setCustomerId($socialAccount->getCustomerId());
+                $this->createSocialAccount($socialUser);
             }
 
             // Generate customer token
-            return $this->getCustomerToken($socialAccount->getCustomer());
+            return $this->getCustomerToken($socialAccount->getCustomerId());
 
         }
         
         //Login by openId
-        if ($socialAccount = $this->socialRepository->getOneByOpenId($socialUser->getOpenId())) {
+        if ($socialAccount = $this->socialAccountRepository->getOneByOpenId($socialUser->getOpenId())) {
 
-            if ($customer = $socialAccount->getCustomer()) {
-                return $this->getCustomerToken($socialAccount->getCustomer());
+            if ($customerId = $socialAccount->getCustomerId()) {
+                return $this->getCustomerToken($customerId);
             }
             return ['uniqueHash' => $socialAccount->getUniqueHash()];
         }
@@ -141,34 +141,30 @@ class CustomerTokenService
     /**
      * Create social account
      * 
-     * @param SocialUserInterface $socialUser
+     * @param SocialAccountInterface $socialAccount
      * @param string $customerId
-     * @return SocialInterface
+     * @return SocialAccountInterface
      */
-    private function createSocialAccount(SocialUserInterface $socialUser, $customerId = null)
+    private function createSocialAccount(SocialAccountInterface $socialAccount)
     {
-        $socialAccount = ObjectManager::getInstance()->create(SocialInterface::class);
+        $socialAccount = ObjectManager::getInstance()->create(SocialAccountInterface::class);
         $mathRandom = ObjectManager::getInstance()->create(\Magento\Framework\Math\Random::class);
         $socialAccount->setUniqueHash($mathRandom->getUniqueHash());
-        $socialAccount->setOpenId($socialUser->getOpenId());
-        $socialAccount->setUnionId($socialUser->getUnionId());
-        if ($customerId) {
-            $socialAccount->setCustomerId($customerId);
-        }
-        $socialAccount->setApplication($socialUser->getApplication());
-        $socialAccount->setPlatform($socialUser->getPlatform());
-        $this->socialRepository->save($socialAccount);
+        $this->socialAccountRepository->save($socialAccount);
         return $socialAccount;
     }
 
     /**
      * Get Customer Token
      *
+     * @param string $customerId
      * @return array
      * @throws UserLockedException
      */
-    private function getCustomerToken($customer)
+    private function getCustomerToken($customerId)
     {
+        $customer = $this->customerFactory->create()->load($customerId);
+
         if ($this->getAuthentication()->isLocked($customer->getId())) {
             throw new UserLockedException(__('The account is locked.'));
         }

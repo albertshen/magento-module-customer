@@ -9,19 +9,19 @@ namespace AlbertMage\Customer\Api\Data;
  * @api
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-interface SocialSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
+interface SocialAccountSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
 {
     /**
      * Get customer social list.
      *
-     * @return \AlbertMage\Customer\Api\Data\SocialInterface[]
+     * @return \AlbertMage\Customer\Api\Data\SocialAccountInterface[]
      */
     public function getItems();
 
     /**
      * Set customer social list.
      *
-     * @param \AlbertMage\Customer\Api\Data\SocialInterface[] $items
+     * @param \AlbertMage\Customer\Api\Data\SocialAccountInterface[] $items
      * @return $this
      */
     public function setItems(array $items);

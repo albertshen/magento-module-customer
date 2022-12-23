@@ -1,19 +1,9 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="AlbertMage\Customer\Api\CustomerTokenServiceInterface" type="AlbertMage\Customer\Model\CustomerTokenService"/>
-    <preference for="AlbertMage\Customer\Api\SocialRepositoryInterface" type="AlbertMage\Customer\Model\SocialRepository"/>
-    <preference for="AlbertMage\Customer\Api\Data\SocialInterface" type="AlbertMage\Customer\Model\Social"/>
-    <preference for="AlbertMage\Customer\Api\Data\SocialSearchResultsInterface" type="AlbertMage\Customer\Model\SocialSearchResults"/>
+    <preference for="AlbertMage\Customer\Api\SocialRepositoryInterface" type="AlbertMage\Customer\Model\SocialAccountRepository"/>
+    <preference for="AlbertMage\Customer\Api\Data\SocialAccountInterface" type="AlbertMage\Customer\Model\SocialAccount"/>
+    <preference for="AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterface" type="AlbertMage\Customer\Model\SocialAccountSearchResults"/>
     <preference for="AlbertMage\Customer\Api\CustomerInterface" type="AlbertMage\Customer\Model\Customer"/>
     <preference for="AlbertMage\Customer\Api\CustomerTokenServiceInterface" type="AlbertMage\Customer\Model\CustomerTokenService"/>
-    <preference for="AlbertMage\Customer\Api\SocialUserInterface" type="AlbertMage\Customer\Model\SocialUser"/>
-    <preference for="AlbertMage\Customer\Api\SocialUserManagerInterface" type="AlbertMage\Customer\Model\SocialUserManager"/>
-    <type name="AlbertMage\Customer\Model\SocialUserManager">
-        <arguments>
-            <argument name="providers" xsi:type="array">
-                <item name="default" xsi:type="string">AlbertMage\Customer\Model\WeChatWebsiteAppUserManager</item>
-                <item name="wxapp" xsi:type="string">AlbertMage\Customer\Model\WeChatWxappUserManager</item>
-            </argument>
-        </arguments>
-    </type>
 </config>

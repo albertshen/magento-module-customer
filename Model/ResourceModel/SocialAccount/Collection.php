@@ -2,10 +2,10 @@
 /**
  * Copyright © PHP Digital, Inc. All rights reserved.
  */
-namespace AlbertMage\Customer\Model\ResourceModel\Social;
+namespace AlbertMage\Customer\Model\ResourceModel\SocialAccount;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use AlbertMage\Customer\Model\ResourceModel\Social;
+use AlbertMage\Customer\Model\ResourceModel\SocialAccount;
 
 /**
  * Class Collection
@@ -20,7 +20,7 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init(\AlbertMage\Customer\Model\Social::class,
-            Social::class);
+        $this->_init(\AlbertMage\Customer\Model\SocialAccount::class,
+            SocialAccount::class);
     }
 }

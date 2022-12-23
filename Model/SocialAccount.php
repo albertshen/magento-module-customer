@@ -5,26 +5,14 @@
 namespace AlbertMage\Customer\Model;
 
 use Magento\Framework\Model\AbstractExtensibleModel;
-use AlbertMage\Customer\Api\Data\SocialInterface;
+use AlbertMage\Customer\Api\Data\SocialAccountInterface;
 
 /**
- * Class Social
+ * Class Social Account
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-class Social extends AbstractExtensibleModel implements SocialInterface
+class SocialAccount extends AbstractExtensibleModel implements SocialAccountInterface
 {
-
-    /**
-     * Customer entity
-     *
-     * @var Customer
-     */
-    protected $_customer;
-
-    /**
-     * @var CustomerFactory
-     */
-    protected $_customerFactory;
 
     /**
      * Initialize address model
@@ -33,9 +21,7 @@ class Social extends AbstractExtensibleModel implements SocialInterface
      */
     protected function _construct()
     {
-        $this->_init(\AlbertMage\Customer\Model\ResourceModel\Social::class);
-
-        $this->_customerFactory = \Magento\Framework\App\ObjectManager::getInstance()->create(\Magento\Customer\Model\CustomerFactory::class);
+        $this->_init(\AlbertMage\Customer\Model\ResourceModel\SocialAccount::class);
     }
 
     /**
@@ -68,32 +54,6 @@ class Social extends AbstractExtensibleModel implements SocialInterface
     public function setCustomerId($customerId)
     {
         return $this->setData(self::CUSTOMER_ID, $customerId);
-    }
-
-    /**
-     * Retrieve address customer
-     *
-     * @return Customer|false
-     */
-    public function getCustomer()
-    {
-        if (!$this->getCustomerId()) {
-            return false;
-        }
-        if (empty($this->_customer)) {
-            $this->_customer = $this->_createCustomer()->load($this->getCustomerId());
-        }
-        return $this->_customer;
-    }
-
-    /**
-     * Create customer model
-     *
-     * @return Customer
-     */
-    protected function _createCustomer()
-    {
-        return $this->_customerFactory->create();
     }
 
     /**

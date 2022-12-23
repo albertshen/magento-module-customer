@@ -5,11 +5,11 @@
 namespace AlbertMage\Customer\Api\Data;
 
 /**
- * Customer socical interface.
+ * Customer socical account interface.
  * @api
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-interface SocialInterface extends \Magento\Framework\Api\CustomAttributesDataInterface
+interface SocialAccountInterface extends \Magento\Framework\Api\CustomAttributesDataInterface
 {
     /**#@+
      * Constants for keys of data array. Identical to the name of the getter in snake case
@@ -21,6 +21,7 @@ interface SocialInterface extends \Magento\Framework\Api\CustomAttributesDataInt
     const APPLICATION = 'application';
     const PLATFORM = 'platform';
     const UNIQUE_HASH = 'unique_hash';
+    const ADDITIONAL_DATA = 'additional_data';
     /**#@-*/
 
     /**
@@ -131,15 +132,15 @@ interface SocialInterface extends \Magento\Framework\Api\CustomAttributesDataInt
     /**
      * Retrieve existing extension attributes object or create a new one.
      *
-     * @return \AlbertMage\Customer\Api\Data\SocialExtensionInterface|null
+     * @return \AlbertMage\Customer\Api\Data\SocialAccountExtensionInterface|null
      */
     public function getExtensionAttributes();
 
     /**
      * Set an extension attributes object.
      *
-     * @param \AlbertMage\Customer\Api\Data\SocialExtensionInterface $extensionAttributes
+     * @param \AlbertMage\Customer\Api\Data\SocialAccountExtensionInterface $extensionAttributes
      * @return $this
      */
-    public function setExtensionAttributes(\AlbertMage\Customer\Api\Data\SocialExtensionInterface $extensionAttributes);
+    public function setExtensionAttributes(\AlbertMage\Customer\Api\Data\SocialAccountExtensionInterface $extensionAttributes);
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © PHP Digital, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd" component="Magento_Customer/js/form/components/form">
+    <fieldset name="general">
+        <field name="city_id" sortOrder="98" formElement="select">
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">City</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <filterBy>
+                            <field>region_id</field>
+                            <target>${ $.provider }:${ $.parentScope }.region_id</target>
+                        </filterBy>
+                        <customEntry>city</customEntry>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="district_id" sortOrder="99" formElement="select">
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">District</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <filterBy>
+                            <field>city_id</field>
+                            <target>${ $.provider }:${ $.parentScope }.city_id</target>
+                        </filterBy>
+                        <customEntry>district</customEntry>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="city" sortOrder="100" formElement="input">
+            <settings>
+                <visible>false</visible>
+            </settings>
+        </field>
+        <field name="district" sortOrder="100" formElement="input">
+            <settings>
+                <visible>false</visible>
+            </settings>
+        </field>
+    </fieldset>
+</form>
