@@ -9,12 +9,14 @@ use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchVersionInterface;
+use Magento\Customer\Api\CustomerMetadataInterface;
+use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
 
 /**
  * Creates a customer attribute for managing a customer's external system ID
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-class AddCustomerNicknameAttribute implements DataPatchInterface, PatchVersionInterface
+class AddCustomerNicknameAttribute implements DataPatchInterface
 {
     /**
      * @var ModuleDataSetupInterface
@@ -27,15 +29,23 @@ class AddCustomerNicknameAttribute implements DataPatchInterface, PatchVersionIn
     private $customerSetupFactory;
 
     /**
+     * @var AttributeSetFactory
+     */
+    private $attributeSetFactory;
+
+    /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param CustomerSetupFactory $customerSetupFactory
+     * @param CustomerSetupFactory $eavSetupFactory
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        CustomerSetupFactory $customerSetupFactory
+        CustomerSetupFactory $customerSetupFactory,
+        AttributeSetFactory $attributeSetFactory
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->customerSetupFactory = $customerSetupFactory;
+        $this->attributeSetFactory = $attributeSetFactory;
     }
 
     /**
@@ -48,10 +58,10 @@ class AddCustomerNicknameAttribute implements DataPatchInterface, PatchVersionIn
         // Add customer attribute with settings
         $customerSetup->addAttribute(
             CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
-            'phone',
+            'nickname',
             [
-                'type' => 'varchar',
-                'label' => 'Nickname Number',
+                'type' => 'static',
+                'label' => 'Nickname',
                 'input' => 'text',
                 'required' => 0,
                 'position' => 100,
@@ -64,29 +74,25 @@ class AddCustomerNicknameAttribute implements DataPatchInterface, PatchVersionIn
             ]
         );
 
-        // Add attribute to default attribute set and group
-        $customerSetup->addAttributeToSet(
-            CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
-            CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
-            null,
-            'nickname'
-        );
+        $customerEntity = $customerSetup->getEavConfig()->getEntityType(Customer::ENTITY);
+        $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
-        // Get the newly created attribute's model
-        $attribute = $customerSetup->getEavConfig()
-            ->getAttribute(Customer::ENTITY, 'nickname');
+        $attributeSet = $this->attributeSetFactory->create();
+        $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
-        // Make attribute visible in Admin customer form
-        $attribute->setData('used_in_forms', [
-            'adminhtml_customer',
-            'customer_account_create',
-            'customer_account_edit'
+        $attribute = $customerSetup->getEavConfig()->getAttribute(Customer::ENTITY, 'nickname');
+
+        $attribute->addData([
+            'attribute_set_id' => $attributeSetId,
+            'attribute_group_id' => $attributeGroupId,
+            'used_in_forms' => ['adminhtml_customer', 'customer_account_create', 'customer_account_edit'],
         ]);
 
         // Save attribute using its resource model
-        $attribute->save($attribute);
+        $attribute->save();
 
         return $this;
+
     }
 
     /**
@@ -95,14 +101,6 @@ class AddCustomerNicknameAttribute implements DataPatchInterface, PatchVersionIn
     public static function getDependencies()
     {
         return [];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getVersion()
-    {
-        return '2.4.5';
     }
 
     /**

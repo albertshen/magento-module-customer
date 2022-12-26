@@ -14,7 +14,7 @@ interface AccountManagementInterface
     /**
      * Create customer account.
      *
-     * @param $phone
+     * @param string $phone
      * @param string $verifyCode
      * @param string $socialHash
      * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface

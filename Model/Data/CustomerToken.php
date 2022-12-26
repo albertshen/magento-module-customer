@@ -5,12 +5,13 @@
 namespace AlbertMage\Customer\Model\Data;
 
 use AlbertMage\Customer\Api\Data\CustomerTokenInterface;
+use Magento\Framework\DataObject;
 
 /**
  * Class Customer Token
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-class CustomerToken implements CustomerTokenInterface
+class CustomerToken extends DataObject implements CustomerTokenInterface
 {
 
     /**
@@ -18,7 +19,7 @@ class CustomerToken implements CustomerTokenInterface
      */
     public function getToken()
     {
-        return parent::getData(self::TOKEN);
+        return $this->getData(self::TOKEN);
     }
 
     /**
@@ -34,7 +35,7 @@ class CustomerToken implements CustomerTokenInterface
      */
     public function getSocialHash()
     {
-        return parent::getData(self::SOCIAL_HASH);
+        return $this->getData(self::SOCIAL_HASH);
     }
 
     /**

@@ -11,14 +11,14 @@ use Magento\Customer\Model\AuthenticationInterface;
 use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Customer\Model\CustomerFactory;
 use AlbertMage\Customer\Api\SocialAccountRepositoryInterface;
+use AlbertMage\Customer\Api\CustomerTokenServiceInterface;
 use AlbertMage\Customer\Api\Data\SocialAccountInterface;
-use AlbertMage\Customer\Api\Data\SocialAccountInterfaceFactory;
 use AlbertMage\Customer\Api\Data\CustomerTokenInterfaceFactory;
 
 /**
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-class CustomerTokenService
+class CustomerTokenService implements CustomerTokenServiceInterface
 {
     /**
      * @var ManagerInterface
@@ -45,17 +45,12 @@ class CustomerTokenService
     /**
      * @var CustomerFactory
      */
-    protected $customerFactory
+    protected $customerFactory;
 
     /**
      * @var SocialAccountRepositoryInterface
      */
     private $socialAccountRepository;
-
-    /**
-     * @var SocialAccountInterfaceFactory
-     */
-    private $socialAccountInterfaceFactory;
 
     /**
      * @var CustomerTokenInterfaceFactory
@@ -71,7 +66,6 @@ class CustomerTokenService
      * @param AuthenticationInterface authentication
      * @param CustomerFactory $customerFactory
      * @param SocialAccountRepositoryInterface $socialAccountRepository
-     * @param SocialAccountInterfaceFactory $socialAccountInterfaceFactory
      * @param CustomerTokenInterfaceFactory $customerTokenInterfaceFactory
      */
     public function __construct(
@@ -81,7 +75,6 @@ class CustomerTokenService
         AuthenticationInterface $authentication,
         CustomerFactory $customerFactory,
         SocialAccountRepositoryInterface $socialAccountRepository,
-        SocialAccountInterfaceFactory $socialAccountInterfaceFactory,
         CustomerTokenInterfaceFactory $customerTokenInterfaceFactory
     ) {
         $this->eventManager = $eventManager;
@@ -90,7 +83,6 @@ class CustomerTokenService
         $this->authentication = $authentication;
         $this->customerFactory = $customerFactory;
         $this->socialAccountRepository = $socialAccountRepository;
-        $this->socialAccountInterfaceFactory = $socialAccountInterfaceFactory;
         $this->customerTokenInterfaceFactory = $customerTokenInterfaceFactory;
     }
 
@@ -100,7 +92,7 @@ class CustomerTokenService
     public function createCustomerAccessToken(SocialAccountInterface $socialUser)
     {
         try {
-            return $this->doCreateCustomerAccessToken($socialAccount);
+            return $this->doCreateCustomerAccessToken($socialUser);
         } catch (UserLockedException $e) {
             throw new UserLockedException(__('The account is locked.'), null, 4004);
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
@@ -114,7 +106,7 @@ class CustomerTokenService
      *
      * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface
      */
-    private function doCreateCustomerAccessToken(SocialAccountInterface $socialAccount)
+    private function doCreateCustomerAccessToken(SocialAccountInterface $socialUser)
     {
         // Login by UnionId
         if ($socialUser->getUnionId() && $socialAccount = $this->socialAccountRepository->getOneByBoundUionId($socialUser->getUnionId())) {
@@ -173,7 +165,6 @@ class CustomerTokenService
      */
     private function createSocialAccount(SocialAccountInterface $socialAccount)
     {
-        $socialAccount = $this->socialAccountInterfaceFactory->create();
         $mathRandom = $this->randomFactory->create();
         $socialAccount->setUniqueHash($mathRandom->getUniqueHash());
         $this->socialAccountRepository->save($socialAccount);

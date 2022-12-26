@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="AlbertMage\Customer\Api\SocialAccountRepositoryInterface" type="AlbertMage\Customer\Model\ResourceModel\SocialAccountRepository"/>
-    <preference for="AlbertMage\Customer\Api\Data\SocialAccountInterface" type="AlbertMage\Customer\Model\Data\SocialAccount"/>
+    <preference for="AlbertMage\Customer\Api\Data\SocialAccountInterface" type="AlbertMage\Customer\Model\SocialAccount"/>
     <preference for="AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterface" type="AlbertMage\Customer\Model\SocialAccountSearchResults"/>
-    <preference for="AlbertMage\Customer\Api\AccountManagementInterfaceInterface" type="AlbertMage\Customer\Model\AccountManagement"/>
+    <preference for="AlbertMage\Customer\Api\AccountManagementInterface" type="AlbertMage\Customer\Model\AccountManagement"/>
     <preference for="AlbertMage\Customer\Api\CustomerTokenServiceInterface" type="AlbertMage\Customer\Model\CustomerTokenService"/>
     <preference for="AlbertMage\Customer\Api\Data\CustomerTokenInterface" type="AlbertMage\Customer\Model\Data\CustomerToken"/>
 </config>

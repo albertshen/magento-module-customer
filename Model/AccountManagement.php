@@ -7,10 +7,11 @@ namespace AlbertMage\Customer\Model;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Integration\Model\Oauth\TokenFactory as TokenModelFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
-use AlbertMage\Customer\Api\Resource\SocialAccountRepositoryInterface;
+use AlbertMage\Customer\Api\SocialAccountRepositoryInterface;
 use AlbertMage\Customer\Api\Data\CustomerTokenInterfaceFactory;
 
 

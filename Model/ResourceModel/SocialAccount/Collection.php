@@ -20,7 +20,7 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init(\AlbertMage\Customer\Model\Data\SocialAccount::class,
+        $this->_init(\AlbertMage\Customer\Model\SocialAccount::class,
             SocialAccount::class);
     }
 }

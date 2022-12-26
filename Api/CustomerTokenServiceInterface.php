@@ -4,6 +4,8 @@
  */
 namespace AlbertMage\Customer\Api;
 
+use AlbertMage\Customer\Api\Data\SocialAccountInterface;
+
 /**
  * Interface CustomerTokenServiceInterface
  * @api
@@ -16,6 +18,6 @@ interface CustomerTokenServiceInterface
      * 
      * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface
      */
-    public function createCustomerAccessToken();
+    public function createCustomerAccessToken(SocialAccountInterface $socialUser);
 
 }

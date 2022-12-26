@@ -8,6 +8,7 @@ use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use AlbertMage\Customer\Model\SocialAccountRegistry;
 use AlbertMage\Customer\Api\Data\SocialAccountInterface;
 use AlbertMage\Customer\Api\Data\SocialAccountSearchResultInterfaceFactory;
 use AlbertMage\Customer\Model\ResourceModel\SocialAccount;
@@ -20,11 +21,6 @@ use AlbertMage\Customer\Model\ResourceModel\SocialAccount\CollectionFactory;
  */
 class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountRepositoryInterface
 {
-
-    /**
-     * @var \AlbertMage\Customer\Model\SocialAccountFactory
-     */
-    protected $socialAccountFactory;
 
     /**
      * @var \AlbertMage\Customer\Model\SocialAccountRegistry
@@ -52,7 +48,6 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
     private $collectionProcessor;
 
     /**
-     * @param \AlbertMage\Customer\Model\SocialAccountFactory $socialAccountFactory
      * @param \AlbertMage\Customer\Model\SocialAccountRegistry $socialAccountRegistry
      * @param \AlbertMage\Customer\Model\ResourceModel\SocialAccount $socialAccountResourceModel
      * @param \AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterfaceFactory $socialAccountSearchResultsFactory
@@ -60,14 +55,12 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
      * @param CollectionProcessorInterface $collectionProcessor
      */
     public function __construct(
-        \AlbertMage\Customer\Model\SocialAccountFactory $socialAccountAccountFactory,
-        \AlbertMage\Customer\Model\SocialAccountRegistry $socialAccountlRegistry,
+        \AlbertMage\Customer\Model\SocialAccountRegistry $socialAccountRegistry,
         \AlbertMage\Customer\Model\ResourceModel\SocialAccount $socialAccountResourceModel,
         \AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterfaceFactory $socialAccountSearchResultsFactory,
         \AlbertMage\Customer\Model\ResourceModel\SocialAccount\CollectionFactory $socialAccountCollectionFactory,
         CollectionProcessorInterface $collectionProcessor
     ) {
-        $this->socialAccountFactory = $socialAccountFactory;
         $this->socialAccountRegistry = $socialAccountRegistry;
         $this->socialAccountResourceModel = $socialAccountResourceModel;
         $this->socialAccountSearchResultsFactory = $socialAccountSearchResultsFactory;
@@ -114,9 +107,7 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
         $collection = $this->socialAccountCollectionFactory->create();
         $collection->addFieldToFilter('openid', ['eq' => $openid]);
         if ($collection->getSize()) {
-            foreach($collection as $item) {
-                return $item;
-            }
+            return $collection->getFirstItem();
         }
         return null;
     }
