@@ -2,7 +2,7 @@
 /**
  * Copyright © PHP Digital, Inc. All rights reserved.
  */
-namespace AlbertMage\Customer\Model;
+namespace AlbertMage\Customer\Model\ResourceModel;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -82,7 +82,7 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
      * @return SocialAccountInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function save(\AlbertMage\Customer\Api\Data\SocialAccountInterface $socialAccount)
+    public function save(SocialAccountInterface $socialAccount)
     {
         $this->socialAccountResourceModel->save($socialAccount);
         return $socialAccount;
@@ -135,9 +135,7 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
         $collection->addFieldToFilter('unionid', ['eq' => $unionId]);
         $collection->addFieldToFilter('customer_id', ['neq' => 'NULL']);
         if ($collection->getSize()) {
-            foreach($collection as $item) {
-                return $item;
-            }
+            return $collection->getFirstItem();
         }
         return null;
     }
@@ -162,7 +160,7 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
      * Retrieve customer.
      *
      * @param int $uniqueId
-     * @return SocialAccountInterface[]
+     * @return SocialAccountInterface|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getByUniqueId($uniqueId)
@@ -170,7 +168,10 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
         /** @var Collection $collection */
         $collection = $this->socialAccountCollectionFactory->create();
         $collection->addFieldToFilter('unique_hash', ['eq' => $uniqueId]);
-        return $collection->getItems();
+        if ($collection->getSize()) {
+            return $collection->getFirstItem();
+        }
+        return null;
     }
 
     /**

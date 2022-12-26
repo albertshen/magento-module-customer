@@ -4,24 +4,32 @@
  */
 namespace AlbertMage\Customer\Model;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ManagerInterface;
-use AlbertMage\Customer\Api\SocialAccountRepositoryInterface;
-use Magento\Customer\Model\AuthenticationInterface;
+use Magento\Framework\Math\RandomFactory;
 use Magento\Integration\Model\Oauth\TokenFactory as TokenModelFactory;
+use Magento\Customer\Model\AuthenticationInterface;
 use Magento\Framework\Exception\State\UserLockedException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\InvalidEmailOrPasswordException;
 use Magento\Customer\Model\CustomerFactory;
-use AlbertMage\Customer\Api\SocialUserInterface;
+use AlbertMage\Customer\Api\SocialAccountRepositoryInterface;
 use AlbertMage\Customer\Api\Data\SocialAccountInterface;
-use AlbertMage\Customer\Api\SocialUserManagerInterface;
+use AlbertMage\Customer\Api\Data\SocialAccountInterfaceFactory;
+use AlbertMage\Customer\Api\Data\CustomerTokenInterfaceFactory;
 
 /**
  * @author Albert Shen <albertshen1206@gmail.com>
  */
 class CustomerTokenService
 {
+    /**
+     * @var ManagerInterface
+     */
+    private $eventManager;
+
+    /**
+     * @var RandomFactory
+     */
+    private $randomFactory;
+
     /**
      * Token Model
      *
@@ -35,49 +43,62 @@ class CustomerTokenService
     protected $authentication;
 
     /**
-     * @var SocialAccountRepositoryInterface
-     */
-    private $socialAccountRepository;
-
-    /**
      * @var CustomerFactory
      */
     protected $customerFactory
 
     /**
-     * @var Magento\Framework\Event\ManagerInterface
+     * @var SocialAccountRepositoryInterface
      */
-    private $eventManager;
+    private $socialAccountRepository;
+
+    /**
+     * @var SocialAccountInterfaceFactory
+     */
+    private $socialAccountInterfaceFactory;
+
+    /**
+     * @var CustomerTokenInterfaceFactory
+     */
+    private $customerTokenInterfaceFactory;
 
     /**
      * Initialize service
      *
+     * @param ManagerInterface $eventManager
+     * @param RandomFactory $randomFactory
      * @param TokenModelFactory $tokenModelFactory
      * @param AuthenticationInterface authentication
-     * @param SocialAccountRepositoryInterface $socialAccountRepository
-     * @param ManagerInterface $eventManager
      * @param CustomerFactory $customerFactory
+     * @param SocialAccountRepositoryInterface $socialAccountRepository
+     * @param SocialAccountInterfaceFactory $socialAccountInterfaceFactory
+     * @param CustomerTokenInterfaceFactory $customerTokenInterfaceFactory
      */
     public function __construct(
+        ManagerInterface $eventManager,
+        RandomFactory $randomFactory,
         TokenModelFactory $tokenModelFactory,
         AuthenticationInterface $authentication,
-        SocialAccountRepositoryInterface $socialAccountRepository,
         CustomerFactory $customerFactory,
-        ManagerInterface $eventManager
+        SocialAccountRepositoryInterface $socialAccountRepository,
+        SocialAccountInterfaceFactory $socialAccountInterfaceFactory,
+        CustomerTokenInterfaceFactory $customerTokenInterfaceFactory
     ) {
+        $this->eventManager = $eventManager;
+        $this->randomFactory = $randomFactory;
         $this->tokenModelFactory = $tokenModelFactory;
         $this->authentication = $authentication;
-        $this->socialAccountRepository = $socialAccountRepository;
         $this->customerFactory = $customerFactory;
-        $this->eventManager = $eventManager;
+        $this->socialAccountRepository = $socialAccountRepository;
+        $this->socialAccountInterfaceFactory = $socialAccountInterfaceFactory;
+        $this->customerTokenInterfaceFactory = $customerTokenInterfaceFactory;
     }
 
     /**
      * @inheritdoc
      */
-    public function createCustomerAccessToken(\AlbertMage\Customer\Model\SocialAccount $socialAccount)
+    public function createCustomerAccessToken(SocialAccountInterface $socialUser)
     {
-
         try {
             return $this->doCreateCustomerAccessToken($socialAccount);
         } catch (UserLockedException $e) {
@@ -91,9 +112,9 @@ class CustomerTokenService
     /**
      * Create customer AccessToken for miniprogram
      *
-     * @return array
+     * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface
      */
-    private function doCreateCustomerAccessToken($socialUser)
+    private function doCreateCustomerAccessToken(SocialAccountInterface $socialAccount)
     {
         // Login by UnionId
         if ($socialUser->getUnionId() && $socialAccount = $this->socialAccountRepository->getOneByBoundUionId($socialUser->getUnionId())) {
@@ -128,27 +149,32 @@ class CustomerTokenService
             if ($customerId = $socialAccount->getCustomerId()) {
                 return $this->getCustomerToken($customerId);
             }
-            return ['uniqueHash' => $socialAccount->getUniqueHash()];
+
+            return $this->customerTokenInterfaceFactory->create()
+                        ->setSocialHash(
+                            $socialAccount->getUniqueHash()
+                        );
         }
 
         //create a new social account without binding
         $socialAccount = $this->createSocialAccount($socialUser);
 
-        return ['uniqueHash' => $socialAccount->getUniqueHash()];
-
+        return $this->customerTokenInterfaceFactory->create()
+                    ->setSocialHash(
+                        $socialAccount->getUniqueHash()
+                    );
     }
 
     /**
      * Create social account
      * 
      * @param SocialAccountInterface $socialAccount
-     * @param string $customerId
      * @return SocialAccountInterface
      */
     private function createSocialAccount(SocialAccountInterface $socialAccount)
     {
-        $socialAccount = ObjectManager::getInstance()->create(SocialAccountInterface::class);
-        $mathRandom = ObjectManager::getInstance()->create(\Magento\Framework\Math\Random::class);
+        $socialAccount = $this->socialAccountInterfaceFactory->create();
+        $mathRandom = $this->randomFactory->create();
         $socialAccount->setUniqueHash($mathRandom->getUniqueHash());
         $this->socialAccountRepository->save($socialAccount);
         return $socialAccount;
@@ -170,7 +196,13 @@ class CustomerTokenService
         }
         $this->eventManager->dispatch('customer_data_object_login', ['customer' => $customer]);
         $this->eventManager->dispatch('customer_login', ['customer' => $customer]);
-        return ['token' => $this->tokenModelFactory->create()->createCustomerToken($customer->getId())->getToken()];
+        return $this->customerTokenInterfaceFactory->create()
+                    ->setToken(
+                        $this->tokenModelFactory->create()
+                            ->createCustomerToken($customer->getId())
+                            ->getToken()
+                    );
+        
     }
 
     /**

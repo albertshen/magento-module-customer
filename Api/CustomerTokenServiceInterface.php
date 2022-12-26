@@ -14,7 +14,7 @@ interface CustomerTokenServiceInterface
     /**
      * Create customer AccessToken for miniprogram
      * 
-     * @return array
+     * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface
      */
     public function createCustomerAccessToken();
 
