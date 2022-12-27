@@ -1,8 +1,13 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
-    <extension_attributes for="Magento\Customer\Api\Data\AddressInterface">
+<!--     <extension_attributes for="Magento\Customer\Api\Data\AddressInterface">
         <attribute code="city_id" type="int" />
         <attribute code="district" type="string" />
         <attribute code="district_id" type="int" />
     </extension_attributes>
+    <extension_attributes for="Magento\Quote\Api\Data\AddressInterface">
+        <attribute code="city_id" type="int" />
+        <attribute code="district" type="string" />
+        <attribute code="district_id" type="int" />
+    </extension_attributes> -->
 </config>

@@ -7,7 +7,7 @@
 -->
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd" component="Magento_Customer/js/form/components/form">
     <fieldset name="general">
-        <field name="city_id" sortOrder="98" formElement="select">
+        <field name="city_id" component="AlbertMage_Directory/js/form/element/city" sortOrder="98" formElement="select">
             <settings>
                 <validation>
                     <rule name="required-entry" xsi:type="boolean">true</rule>
@@ -27,7 +27,7 @@
                 </select>
             </formElements>
         </field>
-        <field name="district_id" sortOrder="99" formElement="select">
+        <field name="district_id" component="AlbertMage_Directory/js/form/element/district" sortOrder="99" formElement="select">
             <settings>
                 <validation>
                     <rule name="required-entry" xsi:type="boolean">true</rule>
