@@ -10,7 +10,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use AlbertMage\Customer\Model\SocialAccountRegistry;
 use AlbertMage\Customer\Api\Data\SocialAccountInterface;
-use AlbertMage\Customer\Api\Data\SocialAccountSearchResultInterfaceFactory;
+use AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterfaceFactory;
 use AlbertMage\Customer\Model\ResourceModel\SocialAccount;
 use AlbertMage\Customer\Model\ResourceModel\SocialAccount\CollectionFactory;
 
