@@ -143,7 +143,7 @@ class CustomerTokenService implements CustomerTokenServiceInterface
             }
 
             return $this->customerTokenInterfaceFactory->create()
-                        ->setSocialHash(
+                        ->setGuestToken(
                             $socialAccount->getUniqueHash()
                         );
         }
@@ -152,7 +152,7 @@ class CustomerTokenService implements CustomerTokenServiceInterface
         $socialAccount = $this->createSocialAccount($socialUser);
 
         return $this->customerTokenInterfaceFactory->create()
-                    ->setSocialHash(
+                    ->setGuestToken(
                         $socialAccount->getUniqueHash()
                     );
     }
@@ -175,7 +175,7 @@ class CustomerTokenService implements CustomerTokenServiceInterface
      * Get Customer Token
      *
      * @param string $customerId
-     * @return array
+     * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface
      * @throws UserLockedException
      */
     private function getCustomerToken($customerId)

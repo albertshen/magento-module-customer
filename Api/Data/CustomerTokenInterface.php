@@ -13,12 +13,12 @@ interface CustomerTokenInterface
 {
     const TOKEN = 'token';
 
-    const SOCIAL_HASH = 'social_hash';
+    const GUEST_TOKEN = 'guest_token';
     
     /**
      * Get Customer token
      *
-     * @return string
+     * @return string|null
      */
     public function getToken();
 
@@ -31,17 +31,17 @@ interface CustomerTokenInterface
     public function setToken($token);
 
     /**
-     * Get social account hash
+     * Get guest token
      *
-     * @return string
+     * @return string|null
      */
-    public function getSocialHash();
+    public function getGuestToken();
 
     /**
-     * Set social account hash
+     * Set guest token
      *
-     * @param string $socialHash
+     * @param string $guestToken
      * @return $this
      */
-    public function setSocialHash($socialHash);
+    public function setGuestToken($guestToken);
 }
