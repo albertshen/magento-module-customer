@@ -13,7 +13,7 @@ interface CustomerTokenInterface
 {
     const TOKEN = 'token';
 
-    const GUEST_TOKEN = 'guest_token';
+    const TYPE = 'type';
     
     /**
      * Get Customer token
@@ -31,17 +31,17 @@ interface CustomerTokenInterface
     public function setToken($token);
 
     /**
-     * Get guest token
+     * Get token type
      *
      * @return string|null
      */
-    public function getGuestToken();
+    public function getType();
 
     /**
-     * Set guest token
+     * Set token type
      *
-     * @param string $guestToken
+     * @param string $type
      * @return $this
      */
-    public function setGuestToken($guestToken);
+    public function setType($type);
 }

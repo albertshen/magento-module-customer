@@ -33,17 +33,17 @@ class CustomerToken extends DataObject implements CustomerTokenInterface
     /**
      * @inheritDoc
      */
-    public function getGuestToken()
+    public function getType()
     {
-        return $this->getData(self::GUEST_TOKEN);
+        return $this->getData(self::TYPE);
     }
 
     /**
      * @inheritDoc
      */
-    public function setGuestToken($guestToken)
+    public function setType($type)
     {
-        return $this->setData(self::GUEST_TOKEN, $guestToken);
+        return $this->setData(self::TYPE, $type);
     }
 
 }

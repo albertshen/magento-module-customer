@@ -143,18 +143,20 @@ class CustomerTokenService implements CustomerTokenServiceInterface
             }
 
             return $this->customerTokenInterfaceFactory->create()
-                        ->setGuestToken(
+                        ->setToken(
                             $socialAccount->getUniqueHash()
-                        );
+                        )
+                        ->setType('guest');
         }
 
         //create a new social account without binding
         $socialAccount = $this->createSocialAccount($socialUser);
 
         return $this->customerTokenInterfaceFactory->create()
-                    ->setGuestToken(
+                    ->setToken(
                         $socialAccount->getUniqueHash()
-                    );
+                    )
+                    ->setType('guest');
     }
 
     /**
@@ -192,7 +194,7 @@ class CustomerTokenService implements CustomerTokenServiceInterface
                         $this->tokenModelFactory->create()
                             ->createCustomerToken($customer->getId())
                             ->getToken()
-                    );
+                    )->setType('customer');
         
     }
 
