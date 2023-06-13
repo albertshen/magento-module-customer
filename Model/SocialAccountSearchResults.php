@@ -13,6 +13,6 @@ use Magento\Framework\Api\SearchResults;
  * Service Data Object with Social account search results.
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-class SocialAccountSearchResults extends SearchResults implements SocialSearchResultsInterface
+class SocialAccountSearchResults extends SearchResults implements SocialAccountSearchResultsInterface
 {
 }
