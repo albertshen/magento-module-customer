@@ -162,7 +162,12 @@ class SocialAccount extends AbstractExtensibleModel implements SocialAccountInte
      */
     public function getCustomer()
     {
-        return $this->_createCustomerInstance()->load($this->getCustomerId());
+        $customer = $this->getData('customer');
+        if (null === $customer) {
+            $customer = $this->_createCustomerInstance()->load($this->getCustomerId());
+            $this->setData('customer', $customer);
+        }
+        return $customer;
     }
 
     /**
@@ -172,7 +177,7 @@ class SocialAccount extends AbstractExtensibleModel implements SocialAccountInte
      */
     protected function _createCustomerInstance()
     {
-        return ObjectManager::getInstance()->create(Magento\Customer\Model\Customer::class);
+        return ObjectManager::getInstance()->create(\Magento\Customer\Model\Customer::class);
     }
 
 }

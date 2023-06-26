@@ -131,7 +131,7 @@ class CustomerTokenService implements CustomerTokenServiceInterface
             }
 
             // Generate customer token
-            return $this->getCustomerToken($socialAccount->getCustomerId());
+            return $this->getCustomerToken($socialAccount->getCustomer());
 
         }
         
@@ -139,7 +139,7 @@ class CustomerTokenService implements CustomerTokenServiceInterface
         if ($socialAccount = $this->socialAccountRepository->getOneByOpenId($socialUser->getOpenId())) {
 
             if ($customerId = $socialAccount->getCustomerId()) {
-                return $this->getCustomerToken($customerId);
+                return $this->getCustomerToken($socialAccount->getCustomer());
             }
 
             return $this->customerTokenInterfaceFactory->create()
@@ -176,13 +176,12 @@ class CustomerTokenService implements CustomerTokenServiceInterface
     /**
      * Get Customer Token
      *
-     * @param string $customerId
+     * @param \Magento\Customer\Model\Customer $customer
      * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface
      * @throws UserLockedException
      */
-    private function getCustomerToken($customerId)
+    public function getCustomerToken(\Magento\Customer\Model\Customer $customer)
     {
-        $customer = $this->customerFactory->create()->load($customerId);
 
         if ($this->getAuthentication()->isLocked($customer->getId())) {
             throw new UserLockedException(__('The account is locked.'));

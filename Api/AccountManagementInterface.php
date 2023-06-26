@@ -20,10 +20,10 @@ interface AccountManagementInterface
      * @return \AlbertMage\Customer\Api\Data\CustomerTokenInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function createAccount(
-        $phone,
-        $verifyCode,
-        $socialHash = null
-    );
+    // public function createAccount(
+    //     $phone,
+    //     $verifyCode,
+    //     $socialHash = null
+    // );
 
 }

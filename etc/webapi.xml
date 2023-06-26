@@ -1,9 +1,36 @@
 <?xml version="1.0" ?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-	<route url="/V1/customer/register" method="POST">
+<!-- 	<route url="/V1/customer/register" method="POST">
 		<service class="AlbertMage\Customer\Api\AccountManagementInterface" method="createAccount"/>
 		<resources>
 			<resource ref="anonymous"/>
 		</resources>
+	</route> -->
+	<route url="/V1/customer/default-address" method="GET">
+		<service class="AlbertMage\Customer\Api\AddressManagementInterface" method="getPrimaryShippingAddress"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+	</route>
+	<route url="/V1/customer/addresses" method="GET">
+		<service class="AlbertMage\Customer\Api\AddressManagementInterface" method="getCustomerAddresses"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+	</route>
+	<route url="/V1/customer/address/save" method="POST">
+		<service class="AlbertMage\Customer\Api\AddressManagementInterface" method="saveCustomerAddress"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
 	</route>
 </routes>
