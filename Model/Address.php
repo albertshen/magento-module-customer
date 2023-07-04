@@ -18,7 +18,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getId()
     {
-        return $this->getData(self::ID);
+        return $this->getData(self::KEY_ID);
     }
 
     /**
@@ -26,7 +26,23 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setId($id)
     {
-        return $this->setData(self::ID, $id);
+        return $this->setData(self::KEY_ID, $id);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCountryId()
+    {
+        return $this->getData(self::KEY_COUNTRY_ID);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setCountryId($countryId)
+    {
+        return $this->setData(self::KEY_COUNTRY_ID, $countryId);
     }
 
     /**
@@ -34,7 +50,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getRegion()
     {
-        return $this->getData(self::REGION);
+        return $this->getData(self::KEY_REGION);
     }
 
     /**
@@ -42,23 +58,23 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setRegion($region)
     {
-        return $this->setData(self::REGION, $region);
+        return $this->setData(self::KEY_REGION, $region);
     }
 
     /**
      * @inheritdoc
      */
-    public function getRegionCode()
+    public function getRegionId()
     {
-        return $this->getData(self::REGION_CODE);
+        return $this->getData(self::KEY_REGION_ID);
     }
 
     /**
      * @inheritdoc
      */
-    public function setRegionCode($regionCode)
+    public function setRegionId($regionId)
     {
-        return $this->setData(self::REGION_CODE, $regionCode);
+        return $this->setData(self::KEY_REGION_ID, $regionId);
     }
 
     /**
@@ -66,7 +82,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getCity()
     {
-        return $this->getData(self::CITY);
+        return $this->getData(self::KEY_CITY);
     }
 
     /**
@@ -74,23 +90,23 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setCity($city)
     {
-        return $this->setData(self::CITY, $city);
+        return $this->setData(self::KEY_CITY, $city);
     }
 
     /**
      * @inheritdoc
      */
-    public function getCityCode()
+    public function getCityId()
     {
-        return $this->getData(self::CITY_CODE);
+        return $this->getData(self::KEY_CITY_ID);
     }
 
     /**
      * @inheritdoc
      */
-    public function setCityCode($cityCode)
+    public function setCityId($cityId)
     {
-        return $this->setData(self::CITY_CODE, $cityCode);
+        return $this->setData(self::KEY_CITY_ID, $cityId);
     }
 
     /**
@@ -98,7 +114,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getDistrict()
     {
-        return $this->getData(self::DISTRICT);
+        return $this->getData(self::KEY_DISTRICT);
     }
 
     /**
@@ -106,23 +122,23 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setDistrict($district)
     {
-        return $this->setData(self::DISTRICT, $district);
+        return $this->setData(self::KEY_DISTRICT, $district);
     }
 
     /**
      * @inheritdoc
      */
-    public function getDistrictCode()
+    public function getDistrictId()
     {
-        return $this->getData(self::DISTRICT_CODE);
+        return $this->getData(self::KEY_DISTRICT_ID);
     }
 
     /**
      * @inheritdoc
      */
-    public function setDistrictCode($districtCode)
+    public function setDistrictId($districtId)
     {
-        return $this->setData(self::DISTRICT_CODE, $districtCode);
+        return $this->setData(self::KEY_DISTRICT_ID, $districtId);
     }
 
     /**
@@ -130,7 +146,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getStreet()
     {
-        return $this->getData(self::STREET);
+        return $this->getData(self::KEY_STREET);
     }
 
     /**
@@ -138,23 +154,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setStreet($street)
     {
-        return $this->setData(self::STREET, $street);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getTelephone()
-    {
-        return $this->getData(self::TELEPHONE);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setTelephone($telephone)
-    {
-        return $this->setData(self::TELEPHONE, $telephone);
+        return $this->setData(self::KEY_STREET, $street);
     }
 
     /**
@@ -162,7 +162,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getPostcode()
     {
-        return $this->getData(self::POSTCODE);
+        return $this->getData(self::KEY_POSTCODE);
     }
 
     /**
@@ -170,7 +170,23 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setPostcode($postcode)
     {
-        return $this->setData(self::POSTCODE, $postcode);
+        return $this->setData(self::KEY_POSTCODE, $postcode);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTelephone()
+    {
+        return $this->getData(self::KEY_TELEPHONE);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setTelephone($telephone)
+    {
+        return $this->setData(self::KEY_TELEPHONE, $telephone);
     }
 
     /**
@@ -178,7 +194,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getFirstname()
     {
-        return $this->getData(self::FIRSTNAME);
+        return $this->getData(self::KEY_FIRSTNAME);
     }
 
     /**
@@ -186,7 +202,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setFirstname($firstName)
     {
-        return $this->setData(self::FIRSTNAME, $firstName);
+        return $this->setData(self::KEY_FIRSTNAME, $firstName);
     }
 
     /**
@@ -194,7 +210,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getLastname()
     {
-        return $this->getData(self::LASTNAME);
+        return $this->getData(self::KEY_LASTNAME);
     }
 
     /**
@@ -202,7 +218,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setLastname($lastName)
     {
-        return $this->setData(self::LASTNAME, $lastName);
+        return $this->setData(self::KEY_LASTNAME, $lastName);
     }
 
     /**
@@ -210,7 +226,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getIsDefaultShipping()
     {
-        return $this->getData(self::DEFAULT_SHIPPING);
+        return $this->getData(self::KEY_DEFAULT_SHIPPING);
     }
 
     /**
@@ -218,6 +234,6 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function setIsDefaultShipping($isDefaultShipping)
     {
-        return $this->setData(self::DEFAULT_SHIPPING, $isDefaultShipping);
+        return $this->setData(self::KEY_DEFAULT_SHIPPING, $isDefaultShipping);
     }
 }

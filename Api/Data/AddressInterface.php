@@ -16,19 +16,34 @@ interface AddressInterface
     /**#@+
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const ID = 'id';
-    const REGION = 'region';
-    const REGION_CODE = 'region_code';
-    const CITY = 'city';
-    const CITY_CODE = 'city_code';
-    const DISTRICT = 'district';
-    const DISTRICT_CODE = 'district_code';
-    const STREET = 'street';
-    const TELEPHONE = 'telephone';
-    const POSTCODE = 'postcode';
-    const FIRSTNAME = 'firstname';
-    const LASTNAME = 'lastname';
-    const DEFAULT_SHIPPING = 'default_shipping';
+    const KEY_ID = 'id';
+
+    const KEY_COUNTRY_ID = 'country_id';
+
+    const KEY_REGION = 'region';
+
+    const KEY_REGION_ID = 'region_id';
+
+    const KEY_CITY = 'city';
+
+    const KEY_CITY_ID = 'city_id';
+
+    const KEY_DISTRICT = 'district';
+
+    const KEY_DISTRICT_ID = 'district_id';
+
+    const KEY_POSTCODE = 'postcode';
+
+    const KEY_STREET = 'street';
+
+    const KEY_FIRSTNAME = 'firstname';
+
+    const KEY_LASTNAME = 'lastname';
+
+    const KEY_TELEPHONE = 'telephone';
+
+    const KEY_DEFAULT_SHIPPING = 'default_shipping';
+
     /**#@-*/
 
     /**
@@ -47,6 +62,21 @@ interface AddressInterface
     public function setId($id);
 
     /**
+     * Get country Id
+     *
+     * @return string|null
+     */
+    public function getCountryId();
+
+    /**
+     * Set country Id
+     *
+     * @param string $countryId
+     * @return $this
+     */
+    public function setCountryId($countryId);
+
+    /**
      * Get region
      *
      * @return string|null
@@ -62,19 +92,19 @@ interface AddressInterface
     public function setRegion($region);
 
     /**
-     * Get region Code
+     * Get region id
      *
      * @return int|null
      */
-    public function getRegionCode();
+    public function getRegionId();
 
     /**
-     * Set region Code
+     * Set region id
      *
-     * @param int $regionCode
+     * @param int $regionId
      * @return $this
      */
-    public function setRegionCode($regionCode);
+    public function setRegionId($regionId);
 
     /**
      * Get city name
@@ -92,19 +122,19 @@ interface AddressInterface
     public function setCity($city);
 
     /**
-     * Get city Code
+     * Get city id
      *
      * @return int|null
      */
-    public function getCityCode();
+    public function getCityId();
 
     /**
-     * Set city Code
+     * Set city id
      *
-     * @param int $cityCode
+     * @param int $cityId
      * @return $this
      */
-    public function setCityCode($cityCode);
+    public function setCityId($cityId);
 
     /**
      * Get district name
@@ -122,49 +152,34 @@ interface AddressInterface
     public function setDistrict($district);
 
     /**
-     * Get district Code
+     * Get district id
      *
      * @return int|null
      */
-    public function getDistrictCode();
+    public function getDistrictId();
 
     /**
-     * Set district Code
+     * Set district id
      *
-     * @param int $districtCode
+     * @param int $districtId
      * @return $this
      */
-    public function setDistrictCode($districtCode);
+    public function setDistrictId($districtId);
 
     /**
      * Get street
      *
-     * @return string|null
+     * @return string[]|null
      */
     public function getStreet();
 
     /**
      * Set street
      *
-     * @param string $street
+     * @param string[] $street
      * @return $this
      */
-    public function setStreet(string $street);
-
-    /**
-     * Get telephone number
-     *
-     * @return string|null
-     */
-    public function getTelephone();
-
-    /**
-     * Set telephone number
-     *
-     * @param string $telephone
-     * @return $this
-     */
-    public function setTelephone($telephone);
+    public function setStreet($street);
 
     /**
      * Get postcode
@@ -180,6 +195,21 @@ interface AddressInterface
      * @return $this
      */
     public function setPostcode($postcode);
+
+    /**
+     * Get telephone number
+     *
+     * @return string|null
+     */
+    public function getTelephone();
+
+    /**
+     * Set telephone number
+     *
+     * @param string $telephone
+     * @return $this
+     */
+    public function setTelephone($telephone);
 
     /**
      * Get first name

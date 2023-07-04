@@ -106,7 +106,9 @@ class AddressManagement implements \AlbertMage\Customer\Api\AddressManagementInt
                 $addresses[] = $this->createAddress($item, false);
             }
         }
-        array_unshift($addresses, $defaultItem);
+        if (isset($defaultItem)) {
+            array_unshift($addresses, $defaultItem);
+        }
         return $addresses;
     }
 
@@ -128,6 +130,7 @@ class AddressManagement implements \AlbertMage\Customer\Api\AddressManagementInt
             $customerAddress = $this->mageAddressFactory->create();
         }
 
+        $customerAddress->setCountryId('CN');
         $customerAddress->setRegion($address->getRegion());
         $region = $this->regionFactory->create()->loadByName($address->getRegion(), 'CN');
         if ($regionId = $region->getId()) {
@@ -143,7 +146,7 @@ class AddressManagement implements \AlbertMage\Customer\Api\AddressManagementInt
         if ($districtId = $district->getId()) {
             $customerAddress->setDistrictId($districtId);
         }
-        $customerAddress->setStreet([$address->getStreet()]);
+        $customerAddress->setStreet($address->getStreet());
         $customerAddress->setPostcode($address->getPostcode());
         $customerAddress->setFirstname($address->getFirstname());
         $customerAddress->setLastname($address->getLastname());
@@ -171,6 +174,26 @@ class AddressManagement implements \AlbertMage\Customer\Api\AddressManagementInt
     }
 
     /**
+     * @inheritDoc
+     */
+    public function removeCustomerAddress($customerId, $addressId) {
+
+        $customer = $this->customerFactory->create()->load($customerId);
+
+        if ($addressId) {
+            foreach ($customer->getAddressesCollection() as $item) {
+                if ($item->getId() == $addressId) {
+                    $item->delete();
+                    $customer->save();
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Create address
      * 
      * @param int $customerId
@@ -180,11 +203,15 @@ class AddressManagement implements \AlbertMage\Customer\Api\AddressManagementInt
     private function createAddress(\Magento\Customer\Model\Address $customerAddress, $isDefaultShipping = false) {
         $address = $this->addressFactory->create();
         $address->setId($customerAddress->getId());
+        $address->setCountryId('CN');
         $address->setRegion($customerAddress->getRegion());
+        $address->setRegionId($customerAddress->getRegionId());
         $address->setCity($customerAddress->getCity());
+        $address->setCityId($customerAddress->getCityId());
         $address->setDistrict($customerAddress->getDistrict());
+        $address->setDistrictId($customerAddress->getDistrictId());
         $address->setStreet($customerAddress->getStreet());
-        $address->setPostcode($customerAddress->getPostCode());
+        $address->setPostcode($customerAddress->getPostcode());
         $address->setFirstname($customerAddress->getFirstname());
         $address->setLastname($customerAddress->getLastname());
         $address->setTelephone($customerAddress->getTelephone());

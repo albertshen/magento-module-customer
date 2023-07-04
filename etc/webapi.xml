@@ -33,4 +33,13 @@
             <parameter name="customerId" force="true">%customer_id%</parameter>
         </data>
 	</route>
+	<route url="/V1/customer/address/remove" method="POST">
+		<service class="AlbertMage\Customer\Api\AddressManagementInterface" method="removeCustomerAddress"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+	</route>
 </routes>

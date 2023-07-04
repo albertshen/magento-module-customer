@@ -95,6 +95,69 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
     }
 
     /**
+     * Retrieve sociales matching the specified criteria.
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return \AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getList(SearchCriteriaInterface $searchCriteria)
+    {
+        /** @var Collection $collection */
+        $collection = $this->socialAccountCollectionFactory->create();
+
+        $this->collectionProcessor->process($searchCriteria, $collection);
+
+        /** @var \AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterface $searchResults */
+        $searchResults = $this->socialAccountSearchResultsFactory->create();
+        $socialAccounts = [];
+        /** @var \AlbertMage\Customer\Model\SocialAccount $socialAccountModel */
+        foreach ($collection as $socialAccountModel) {
+            $socialAccounts[] = $socialAccountModel->getDataModel();
+        }
+        $searchResults->setItems($socialAccounts);
+        $searchResults->setSearchCriteria($searchCriteria);
+        $searchResults->setTotalCount($collection->getSize());
+        return $searchResults;
+    }
+
+    /**
+     * Delete customer socialAccount.
+     *
+     * @param SocialAccountInterface $socialAccount
+     * @return bool true on success
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function delete(SocialAccountInterface $socialAccount)
+    {
+        try {
+            $this->socialAccountResourceModel->delete($socialAccount);
+            $this->socialAccountRegistry->remove($socialAccountId);
+        } catch (\Exception $exception) {
+            throw new CouldNotDeleteException(
+                __('Could not delete the entry: %1', $exception->getMessage())
+            );
+        }
+        return true;
+    }
+
+    /**
+     * Delete customer social account by ID.
+     *
+     * @param int $socialId
+     * @return bool true on success
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function deleteById($socialId)
+    {
+        $socialAccount = $this->socialAccountRegistry->retrieve($socialAccountId);
+        $this->socialAccountResourceModel->delete($socialAccount);
+        $this->socialAccountRegistry->remove($socialAccountId);
+        return true;
+    }
+
+    /**
      * Retrieve customer.
      *
      * @param int $openid
@@ -166,86 +229,36 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
     }
 
     /**
-     * Is bound customer
+     * Get social account.
      *
      * @param int $customerId
-     * @return boolean
+     * @param string $platform
+     * @param string $application
+     * @return SocialAccountInterface|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function hasBoundCustomer($customerId, $platform = null, $application = null)
+    public function getSocialAccount($customerId, $platform, $application)
     {
         /** @var Collection $collection */
         $collection = $this->socialAccountCollectionFactory->create();
         $collection->addFieldToFilter('customer_id', ['eq' => $customerId]);
-        if ($platform) {
-            $collection->addFieldToFilter('platform', ['eq' => $platform]);
+        $collection->addFieldToFilter('platform', ['eq' => $platform]);
+        $collection->addFieldToFilter('application', ['eq' => $application]);
+        if ($collection->getSize()) {
+            return $collection->getFirstItem();
         }
-        if ($application) {
-            $collection->addFieldToFilter('application', ['eq' => $application]);
-        }
-        return $collection->getSize() ? true : false;
+        return null;
     }
 
     /**
-     * Retrieve sociales matching the specified criteria.
+     * Get miniprogram account.
      *
-     * @param SearchCriteriaInterface $searchCriteria
-     * @return \AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterface
+     * @param int $customerId
+     * @return SocialAccountInterface|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getList(SearchCriteriaInterface $searchCriteria)
+    public function getMiniprogramAccount($customerId)
     {
-        /** @var Collection $collection */
-        $collection = $this->socialAccountCollectionFactory->create();
-
-        $this->collectionProcessor->process($searchCriteria, $collection);
-
-        /** @var \AlbertMage\Customer\Api\Data\SocialAccountSearchResultsInterface $searchResults */
-        $searchResults = $this->socialAccountSearchResultsFactory->create();
-        $socialAccounts = [];
-        /** @var \AlbertMage\Customer\Model\SocialAccount $socialAccountModel */
-        foreach ($collection as $socialAccountModel) {
-            $socialAccounts[] = $socialAccountModel->getDataModel();
-        }
-        $searchResults->setItems($socialAccounts);
-        $searchResults->setSearchCriteria($searchCriteria);
-        $searchResults->setTotalCount($collection->getSize());
-        return $searchResults;
-    }
-
-    /**
-     * Delete customer socialAccount.
-     *
-     * @param SocialAccountInterface $socialAccount
-     * @return bool true on success
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function delete(SocialAccountInterface $socialAccount)
-    {
-        try {
-            $this->socialAccountResourceModel->delete($socialAccount);
-            $this->socialAccountRegistry->remove($socialAccountId);
-        } catch (\Exception $exception) {
-            throw new CouldNotDeleteException(
-                __('Could not delete the entry: %1', $exception->getMessage())
-            );
-        }
-        return true;
-    }
-
-    /**
-     * Delete customer social account by ID.
-     *
-     * @param int $socialId
-     * @return bool true on success
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function deleteById($socialId)
-    {
-        $socialAccount = $this->socialAccountRegistry->retrieve($socialAccountId);
-        $this->socialAccountResourceModel->delete($socialAccount);
-        $this->socialAccountRegistry->remove($socialAccountId);
-        return true;
+        return $this->getSocialAccount($customerId, 'WeChat', 'Miniprogram');
     }
 }
