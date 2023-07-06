@@ -6,6 +6,24 @@
 			<resource ref="anonymous"/>
 		</resources>
 	</route> -->
+    <route url="/V1/customer/profile" method="GET">
+        <service class="AlbertMage\Customer\Api\CustomerManagementInterface" method="getCustomer"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/customer/profile/save" method="POST">
+        <service class="AlbertMage\Customer\Api\CustomerManagementInterface" method="saveCustomer"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
 	<route url="/V1/customer/default-address" method="GET">
 		<service class="AlbertMage\Customer\Api\AddressManagementInterface" method="getPrimaryShippingAddress"/>
         <resources>

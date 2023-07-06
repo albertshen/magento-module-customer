@@ -8,7 +8,7 @@ use Magento\Framework\Model\AbstractModel;
 use AlbertMage\Customer\Api\Data\AddressInterface;
 
 /**
- * Class Social Account
+ * Class Address
  * @author Albert Shen <albertshen1206@gmail.com>
  */
 class Address extends AbstractModel implements AddressInterface

@@ -16,7 +16,7 @@ use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
  * Creates a customer attribute for managing a customer's external system ID
  * @author Albert Shen <albertshen1206@gmail.com>
  */
-class AddCustomerPictureAttribute implements DataPatchInterface
+class AddCustomerCityAttribute implements DataPatchInterface
 {
     /**
      * @var ModuleDataSetupInterface
@@ -58,17 +58,15 @@ class AddCustomerPictureAttribute implements DataPatchInterface
         // Add customer attribute with settings
         $customerSetup->addAttribute(
             CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
-            'picture',
+            'city',
             [
                 'type' => 'varchar',
-                'label' => 'Picture',
+                'label' => 'City',
                 'input' => 'text',
                 'required' => 0,
-                'position' => 100,
+                'position' => 111,
                 'system' => 0,
                 'user_defined' => 1,
-                'is_used_in_grid' => 1,
-                'is_visible_in_grid' => 1,
                 'is_filterable_in_grid' => 1,
                 'is_searchable_in_grid' => 1,
             ]
@@ -80,7 +78,7 @@ class AddCustomerPictureAttribute implements DataPatchInterface
         $attributeSet = $this->attributeSetFactory->create();
         $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
-        $attribute = $customerSetup->getEavConfig()->getAttribute(Customer::ENTITY, 'picture');
+        $attribute = $customerSetup->getEavConfig()->getAttribute(Customer::ENTITY, 'city');
 
         $attribute->addData([
             'attribute_set_id' => $attributeSetId,

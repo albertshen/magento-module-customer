@@ -8,4 +8,6 @@
     <preference for="AlbertMage\Customer\Api\Data\CustomerTokenInterface" type="AlbertMage\Customer\Model\Data\CustomerToken"/>
     <preference for="AlbertMage\Customer\Api\Data\AddressInterface" type="AlbertMage\Customer\Model\Address"/>
     <preference for="AlbertMage\Customer\Api\AddressManagementInterface" type="AlbertMage\Customer\Model\AddressManagement"/>
+    <preference for="AlbertMage\Customer\Api\Data\CustomerInterface" type="AlbertMage\Customer\Model\Customer"/>
+    <preference for="AlbertMage\Customer\Api\CustomerManagementInterface" type="AlbertMage\Customer\Model\CustomerManagement"/>
 </config>
