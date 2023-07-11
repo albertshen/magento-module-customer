@@ -251,13 +251,13 @@ class SocialAccountRepository implements \AlbertMage\Customer\Api\SocialAccountR
     }
 
     /**
-     * Get miniprogram account.
+     * Get wechat miniprogram account.
      *
      * @param int $customerId
      * @return SocialAccountInterface|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getMiniprogramAccount($customerId)
+    public function getWechatMiniprogramAccount($customerId)
     {
         return $this->getSocialAccount($customerId, 'WeChat', 'Miniprogram');
     }

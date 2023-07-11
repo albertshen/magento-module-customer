@@ -60,6 +60,8 @@ class CustomerManagement implements \AlbertMage\Customer\Api\CustomerManagementI
     {
         $customer = $this->customerFactory->create()->load($customerId);
         $newCustomer = $this->customerInterfaceFactory->create();
+        $newCustomer->setPicture($customer->getPicture());
+        $newCustomer->setNickname($customer->getNickname());
         $newCustomer->setPhone($customer->getPhone());
         if ('奇植' != $customer->getFirstname()) {
             $newCustomer->setFirstname($customer->getFirstname());
