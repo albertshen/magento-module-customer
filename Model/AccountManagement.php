@@ -140,25 +140,20 @@ class AccountManagement implements \AlbertMage\Customer\Api\AccountManagementInt
     /**
      * Bind social account.
      *
-     * @param int $customerId
-     * @param int $socialId
+     * @param \Magento\Customer\Model\Customer $customer
+     * @param \AlbertMage\Customer\Model\SocialAccount $socialAccount
      * @return \AlbertMage\Customer\Api\Data\SocialAccountInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function bindSocialAccount($customerId, $socialId)
+    public function bindSocialAccount($customer, $socialAccount)
     {
- 
-        $socialAccount = $this->socialAccountRepository->getById($socialId);
-        if(!$socialAccount->getId()) {
-            throw new LocalizedException(__('social hash is not exist'));
-        }
 
         if($socialAccount->getCustomerId()) {
             throw new LocalizedException(__('social hash has been bond'), null, 4002);
         }
 
         //bind social account
-        $socialAccount->setCustomerId($customerId);
+        $socialAccount->setCustomerId($customer->getId());
         $this->socialAccountRepository->save($socialAccount);
 
         $this->eventManager->dispatch(
